@@ -33,9 +33,10 @@ namespace wfl.Controllers
 
         [Route("")]
         [HttpGet]
-        public IList<Restaurant> Get()
+        [ResponseType(typeof(IList<Restaurant>))]
+        public IHttpActionResult Get()
         {
-            return Restaurant.Restaurants;
+            return Ok(Restaurant.Restaurants);
         }
 
     }
