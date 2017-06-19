@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http.Description;
 using System.Web.Http;
+using System.Web.Http.Results;
 using wfl.Models;
 
 
@@ -14,15 +15,20 @@ namespace wfl.Controllers
     {
         [Route("")]
         [HttpPost]
-        public Restaurant CreateRestaurant([FromUri] string name)
+        [ResponseType(typeof(Restaurant))]
+        public IHttpActionResult CreateRestaurant([FromUri] string name)
         {
+            if (name == null || name.Equals(""))
+            {
+                return BadRequest();
+            }
             Restaurant restaurant = new Restaurant()
             {
                 Name = name,
                 ID = Restaurant.NextID()
             };
             Restaurant.Restaurants.Add(restaurant);
-            return restaurant;
+            return Created(name, restaurant);
         }
 
         [Route("")]
