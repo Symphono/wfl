@@ -18,7 +18,8 @@ namespace wfl.Controllers
         {
             Restaurant restaurant = new Restaurant()
             {
-                Name = name
+                Name = name,
+                ID = Restaurant.NextID()
             };
             Restaurant.Restaurants.Add(restaurant);
             return restaurant;
