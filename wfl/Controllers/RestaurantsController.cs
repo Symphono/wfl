@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 using System.Web.Http.Description;
 using System.Web.Http;
-using System.Web.Http.Results;
+using System.Threading.Tasks;
 using wfl.Models;
 
 
@@ -16,27 +13,22 @@ namespace wfl.Controllers
         [Route("")]
         [HttpPost]
         [ResponseType(typeof(Restaurant))]
-        public IHttpActionResult CreateRestaurant([FromUri] string name)
+        public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] Restaurant restaurant)
         {
-            if (name == null || name.Equals(""))
+            if (restaurant == null || restaurant.Name == null || restaurant.Name.Equals(""))
             {
                 return BadRequest();
             }
-            Restaurant restaurant = new Restaurant()
-            {
-                Name = name,
-                ID = Restaurant.NextID()
-            };
-            Restaurant.Restaurants.Add(restaurant);
-            return Created(name, restaurant);
+            await DBManager.InsertRestaurantAsync(restaurant);
+            return Created(restaurant.ID.ToString(), restaurant);
         }
 
         [Route("")]
         [HttpGet]
-        [ResponseType(typeof(IList<Restaurant>))]
-        public IHttpActionResult Get()
+        [ResponseType(typeof(IEnumerable<Restaurant>))]
+        public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(Restaurant.Restaurants);
+            return Ok(await DBManager.GetAllRestaurantsAsync());
         }
 
     }

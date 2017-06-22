@@ -10,6 +10,5 @@ namespace wfl.Models
         private int totalRestaurants;
         private int pageNumber;
         private int pageSize;
-        private IList<Restaurant> Restaurants;
     }
 }
