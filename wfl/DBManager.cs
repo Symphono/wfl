@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using wfl.Models;
 
 namespace wfl
@@ -24,7 +25,16 @@ namespace wfl
             IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
             await collection.InsertOneAsync(r);
         }
+        public static async Task<Restaurant> UpdateRestaurantNameAsync(ObjectId id, string name)
+        {
+            IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
+            var filter = Builders<Restaurant>.Filter.Eq("ID", id);
+            var update = Builders<Restaurant>.Update.Set("Name", name);
+            await collection.UpdateOneAsync(filter, update);
 
+            IAsyncCursor<Restaurant> task = await collection.FindAsync<Restaurant>(filter);
+            return task.FirstOrDefault();
+        }
         public static async Task<IEnumerable<Restaurant> > GetAllRestaurantsAsync()
         {
             IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
