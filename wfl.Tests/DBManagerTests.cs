@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace wfl.Tests
 {
     [TestClass]
-    public class UnitTest1
+    public class DBManagerTests
     {
         [TestMethod]
         public void TestMethod1()

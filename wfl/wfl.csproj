@@ -152,11 +152,13 @@
   <ItemGroup>
     <Compile Include="App_Start\OwinConfiguration.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\FoodOrdersController.cs" />
     <Compile Include="Controllers\RestaurantsController.cs" />
     <Compile Include="DBManager.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\FoodOrder.cs" />
     <Compile Include="Models\Restaurant.cs" />
     <Compile Include="Models\RestaurantBillboard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
