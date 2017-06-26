@@ -23,5 +23,13 @@ namespace wfl.Controllers
             await DBManager.InsertFoodOrderAsync(order);
             return Created(order.ID.ToString(), order);
         }
+
+        [Route("")]
+        [HttpGet]
+        [ResponseType(typeof(IEnumerable<FoodOrder>))]
+        public async Task<IHttpActionResult> Get()
+        {
+            return Ok(await DBManager.GetAllFoodOrdersAsync());
+        }
     }
 }

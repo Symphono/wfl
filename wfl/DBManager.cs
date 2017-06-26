@@ -39,6 +39,13 @@ namespace wfl
             return task.ToEnumerable<Restaurant>();
         }
 
+        public static async Task<IEnumerable<FoodOrder>> GetAllFoodOrdersAsync()
+        {
+            IMongoCollection<FoodOrder> collection = db.GetCollection<FoodOrder>("food-orders");
+            IAsyncCursor<FoodOrder> task = await collection.FindAsync(order => true, null);
+            return task.ToEnumerable<FoodOrder>();
+        }
+
         public static async Task<bool> CheckRestaurantIDAsync(ObjectId id)
         {
             IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
