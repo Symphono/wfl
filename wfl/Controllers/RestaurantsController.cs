@@ -2,6 +2,7 @@
 using System.Web.Http.Description;
 using System.Web.Http;
 using System.Threading.Tasks;
+using MongoDB.Bson;
 using wfl.Models;
 
 
@@ -21,6 +22,18 @@ namespace wfl.Controllers
             }
             await DBManager.InsertRestaurantAsync(restaurant);
             return Created(restaurant.ID.ToString(), restaurant);
+        }
+
+        [Route("{id}")]
+        [HttpPut]
+        [ResponseType(typeof(Restaurant))]
+        public async Task<IHttpActionResult> UpdateNameAsync([FromUri] string id, [FromBody] Restaurant restaurant)
+        {
+            if (id == null || id.Equals("") || restaurant == null || restaurant.Name == null || restaurant.Name.Equals(""))
+            {
+                return BadRequest();
+            }
+            return Ok(await DBManager.UpdateRestaurantNameAsync(ObjectId.Parse(id), restaurant.Name));
         }
 
         [Route("")]
