@@ -1,35 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Web.Http.Description;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Threading.Tasks;
-using wfl.Models;
-using MongoDB.Bson;
+using Symphono.Wfl.Models;
+using Symphono.Wfl.Database;
 
 
-namespace wfl.Controllers
+namespace Symphono.Wfl.Controllers
 {
     [RoutePrefix("api/FoodOrder")]
     public class FoodOrdersController : ApiController
     {
         [Route("")]
         [HttpPost]
-        [ResponseType(typeof(FoodOrder))]
-        public async Task<IHttpActionResult> CreateFoodOrder([FromBody] FoodOrder order)
+        public async Task<IHttpActionResult> CreateFoodOrder([FromBody] FoodOrderDto order)
         {
-            if (order == null || order.RestaurantID == null || !(await DBManager.CheckRestaurantIDAsync(ObjectId.Parse(order.RestaurantID))))
+            if (order == null || order.RestaurantId == null || !(await DatabaseProvider.GetDatabase().CheckRestaurantIDAsync(order.RestaurantId)))
             {
                 return BadRequest();
             }
-            await DBManager.InsertFoodOrderAsync(order);
-            return Created(order.ID.ToString(), order);
+            await DatabaseProvider.GetDatabase().InsertFoodOrderAsync(order);
+            return Created(order.Id, order);
         }
 
         [Route("")]
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<FoodOrder>))]
         public async Task<IHttpActionResult> Get()
         {
-            return Ok(await DBManager.GetAllFoodOrdersAsync());
+            return Ok(await DatabaseProvider.GetDatabase().GetAllFoodOrdersAsync());
         }
     }
 }

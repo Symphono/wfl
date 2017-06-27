@@ -2,11 +2,11 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Cors;
 using Owin;
-using wfl;
+using Symphono.Wfl;
 
 [assembly: OwinStartup(typeof(OwinConfiguration))]
 
-namespace wfl
+namespace Symphono.Wfl
 {
     public class OwinConfiguration
     {

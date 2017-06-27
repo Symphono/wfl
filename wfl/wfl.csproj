@@ -12,8 +12,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>wfl</RootNamespace>
-    <AssemblyName>wfl</AssemblyName>
+    <RootNamespace>Symphono.Wfl</RootNamespace>
+    <AssemblyName>Symphono.Wfl</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -154,13 +154,16 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\FoodOrdersController.cs" />
     <Compile Include="Controllers\RestaurantsController.cs" />
-    <Compile Include="DBManager.cs" />
+    <Compile Include="Database\DatabaseProvider.cs" />
+    <Compile Include="Database\IDBManager.cs" />
+    <Compile Include="Database\MongoDBManager.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\FoodOrder.cs" />
+    <Compile Include="Models\FoodOrderDto.cs" />
     <Compile Include="Models\Restaurant.cs" />
-    <Compile Include="Models\RestaurantBillboard.cs" />
+    <Compile Include="Models\RestaurantDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
