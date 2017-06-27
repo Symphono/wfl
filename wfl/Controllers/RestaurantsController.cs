@@ -1,34 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Web.Http.Description;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Threading.Tasks;
-using wfl.Models;
+using Symphono.Wfl.Models;
+using Symphono.Wfl.Database;
 
 
-namespace wfl.Controllers
+namespace Symphono.Wfl.Controllers
 {
     [RoutePrefix("api/Restaurant")]
     public class RestaurantsController : ApiController
     {
         [Route("")]
         [HttpPost]
-        [ResponseType(typeof(Restaurant))]
-        public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] Restaurant restaurant)
+        public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
         {
-            if (restaurant == null || restaurant.Name == null || restaurant.Name.Equals(""))
+            if (restaurant == null || string.IsNullOrEmpty(restaurant.Name))
             {
                 return BadRequest();
             }
-            await DBManager.InsertRestaurantAsync(restaurant);
-            return Created(restaurant.ID.ToString(), restaurant);
+            await DatabaseProvider.GetDatabase().InsertRestaurantAsync(restaurant);
+            return Created(restaurant.Id.ToString(), restaurant);
         }
 
         [Route("")]
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<Restaurant>))]
         public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(await DBManager.GetAllRestaurantsAsync());
+            return Ok(await DatabaseProvider.GetDatabase().GetAllRestaurantsAsync());
         }
 
     }
