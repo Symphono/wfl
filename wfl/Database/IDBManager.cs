@@ -8,5 +8,6 @@ namespace Symphono.Wfl.Database
     {
         Task InsertRestaurantAsync(RestaurantDto r);
         Task<IEnumerable<RestaurantDto>> GetAllRestaurantsAsync();
+        Task<RestaurantDto> UpdateRestaurantNameAsync(string id, string name);
     }
 }
