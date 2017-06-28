@@ -13,7 +13,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
         {
-            if (restaurant == null || string.IsNullOrEmpty(restaurant.Name))
+            if (string.IsNullOrEmpty(restaurant?.Name))
             {
                 return BadRequest();
             }
@@ -25,7 +25,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> UpdateNameAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
-            if (string.IsNullOrEmpty(id) || restaurant == null || string.IsNullOrEmpty(restaurant.Name))
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(restaurant?.Name))
             {
                 return BadRequest();
             }
