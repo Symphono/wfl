@@ -13,7 +13,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
         {
-            if (restaurant == null || string.IsNullOrEmpty(restaurant.Name))
+            if (string.IsNullOrEmpty(restaurant?.Name))
             {
                 return BadRequest();
             }
