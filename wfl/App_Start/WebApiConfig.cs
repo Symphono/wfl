@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace wfl
+namespace Symphono.Wfl
 {
     public static class WebApiConfig
     {

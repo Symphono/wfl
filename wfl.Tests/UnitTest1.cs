@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace wfl.Tests
+namespace Symphono.Wfl.Tests
 {
     [TestClass]
     public class UnitTest1
