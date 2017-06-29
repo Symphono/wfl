@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 using System.Threading.Tasks;
 using Symphono.Wfl.Models;
 using Symphono.Wfl.Database;
@@ -13,7 +14,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
         {
-            if (string.IsNullOrEmpty(restaurant?.Name))
+            if (string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
             {
                 return BadRequest();
             }
