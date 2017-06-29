@@ -26,11 +26,31 @@ namespace Symphono.Wfl.Database
             await collection.InsertOneAsync(r);
         }
 
+        public async Task<bool> CheckRestaurantIdAsync(string id)
+        {
+            IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
+            var filter = Builders<RestaurantDto>.Filter.Eq("Id", id);
+            IAsyncCursor<RestaurantDto> task = await collection.FindAsync(filter);
+            IList<RestaurantDto> queryResults = await task.ToListAsync();
+            if (queryResults.Count == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<IEnumerable<RestaurantDto> > GetAllRestaurantsAsync()
         {
             IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
             IAsyncCursor<RestaurantDto> task = await collection.FindAsync(r => true, null);
             return task.ToEnumerable<RestaurantDto>();
+        }
+
+        public async Task<RestaurantDto> GetRestaurantWithIdAsync(string Id)
+        {
+            IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
+            IAsyncCursor<RestaurantDto> task = await collection.FindAsync(r => r.Id == Id, null);
+            return await task.FirstAsync();
         }
     }
 }
