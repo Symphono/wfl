@@ -47,7 +47,7 @@ namespace Symphono.Wfl.Database
             await collection.InsertOneAsync(order);
         }
 
-        public async Task<bool> CheckRestaurantIDAsync(string id)
+        public async Task<bool> CheckRestaurantIdAsync(string id)
         {
             IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
             var filter = Builders<RestaurantDto>.Filter.Eq("Id", id);
