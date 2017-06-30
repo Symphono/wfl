@@ -42,7 +42,6 @@ namespace Symphono.Wfl.Database
 
         public async Task InsertFoodOrderAsync(FoodOrderDto order)
         {
-            order.Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
             IMongoCollection<FoodOrderDto> collection = db.GetCollection<FoodOrderDto>("food-orders");
             await collection.InsertOneAsync(order);
         }
