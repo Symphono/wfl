@@ -23,13 +23,13 @@ namespace Symphono.Wfl.Controllers
 
         [Route("{id}")]
         [HttpPut]
-        public async Task<IHttpActionResult> UpdateNameAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
+        public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(restaurant?.Name))
             {
                 return BadRequest();
             }
-            return Ok(await DatabaseProvider.GetDatabase().UpdateRestaurantNameAsync(id, restaurant.Name));
+            return Ok(await DatabaseProvider.GetDatabase().UpdateRestaurantAsync(id, restaurant));
         }
 
         [Route("")]
