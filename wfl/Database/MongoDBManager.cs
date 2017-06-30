@@ -22,19 +22,17 @@ namespace Symphono.Wfl.Database
 
         public async Task InsertRestaurantAsync(RestaurantDto r)
         {
-            r.Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
             IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
             await collection.InsertOneAsync(r);
         }
 
-        public async Task<RestaurantDto> UpdateRestaurantNameAsync(string id, string name)
+        public async Task<RestaurantDto> UpdateRestaurantAsync(string id, RestaurantDto restaurant)
         {
             IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
             var filter = Builders<RestaurantDto>.Filter.Eq("Id", id);
-            var update = Builders<RestaurantDto>.Update.Set("Name", name);
-            await collection.UpdateOneAsync(filter, update);
+            await collection.ReplaceOneAsync(filter, restaurant);
             IAsyncCursor<RestaurantDto> task = await collection.FindAsync(filter);
-            return task.FirstOrDefault();
+            return await task.FirstAsync();
         }
 
         public async Task<IEnumerable<RestaurantDto> > GetAllRestaurantsAsync()
