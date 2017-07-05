@@ -21,6 +21,17 @@ namespace Symphono.Wfl.Controllers
             return Created(restaurant.Id.ToString(), restaurant);
         }
 
+        [Route("{id}")]
+        [HttpPut]
+        public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
+        {
+            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(restaurant?.Name))
+            {
+                return BadRequest();
+            }
+            return Ok(await DatabaseProvider.GetDatabase().UpdateRestaurantAsync(id, restaurant));
+        }
+
         [Route("")]
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync()

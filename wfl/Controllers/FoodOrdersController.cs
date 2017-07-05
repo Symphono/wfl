@@ -18,7 +18,7 @@ namespace Symphono.Wfl.Controllers
                 return BadRequest();
             }
             await DatabaseProvider.GetDatabase().InsertFoodOrderAsync(order);
-            return Created(order.Id, order);
+            return Created(order.Id.ToString(), order);
         }
 
         [Route("")]
