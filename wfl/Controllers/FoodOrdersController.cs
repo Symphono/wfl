@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Symphono.Wfl.Models;
 using Symphono.Wfl.Database;
-
+using Microsoft.Practices.Unity;
 
 namespace Symphono.Wfl.Controllers
 {
@@ -13,11 +13,11 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrder([FromBody] FoodOrderDto order)
         {
-            if (string.IsNullOrEmpty(order?.RestaurantId) || !(await DatabaseProvider.GetDatabase().CheckRestaurantIdAsync(order.RestaurantId)))
+            if (string.IsNullOrEmpty(order?.RestaurantId) || !(await DIContainerConfig.GetConfiguredContainer().Resolve<IDBManager>().CheckRestaurantIdAsync(order.RestaurantId)))
             {
                 return BadRequest();
             }
-            await DatabaseProvider.GetDatabase().InsertFoodOrderAsync(order);
+            await DIContainerConfig.GetConfiguredContainer().Resolve<IDBManager>().InsertFoodOrderAsync(order);
             return Created(order.Id.ToString(), order);
         }
 
@@ -25,7 +25,7 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
-            return Ok(await DatabaseProvider.GetDatabase().GetAllFoodOrdersAsync());
+            return Ok(await DIContainerConfig.GetConfiguredContainer().Resolve<IDBManager>().GetAllFoodOrdersAsync());
         }
     }
 }
