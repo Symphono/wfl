@@ -165,7 +165,6 @@
     <Compile Include="App_Start\OwinConfiguration.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\RestaurantsController.cs" />
-    <Compile Include="Database\DatabaseProvider.cs" />
     <Compile Include="Database\IDBManager.cs" />
     <Compile Include="Database\MongoDBManager.cs" />
     <Compile Include="DIContainer.cs" />
