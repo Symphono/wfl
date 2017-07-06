@@ -2,13 +2,16 @@
 using System.Threading.Tasks;
 using Symphono.Wfl.Models;
 using Symphono.Wfl.Database;
-
+using Microsoft.Practices.Unity;
 
 namespace Symphono.Wfl.Controllers
 {
     [RoutePrefix("api/Restaurant")]
     public class RestaurantsController : ApiController
     {
+        IUnityContainer container = new UnityContainer();
+        bool isUnityRegistrationComplete = false;
+
         [Route("")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
@@ -17,7 +20,12 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            await DatabaseProvider.GetDatabase().InsertRestaurantAsync(restaurant);
+            if (!isUnityRegistrationComplete)
+            {
+                DIContainer.RegisterElements(container);
+                isUnityRegistrationComplete = true;
+            }
+            await container.Resolve<IDBManager>().InsertRestaurantAsync(restaurant);
             return Created(restaurant.Id.ToString(), restaurant);
         }
 
@@ -29,14 +37,24 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            return Ok(await DatabaseProvider.GetDatabase().UpdateRestaurantAsync(id, restaurant));
+            if (!isUnityRegistrationComplete)
+            {
+                DIContainer.RegisterElements(container);
+                isUnityRegistrationComplete = true;
+            }
+            return Ok(await container.Resolve<IDBManager>().UpdateRestaurantAsync(id, restaurant));
         }
 
         [Route("")]
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(await DatabaseProvider.GetDatabase().GetAllRestaurantsAsync());
+            if (!isUnityRegistrationComplete)
+            {
+                DIContainer.RegisterElements(container);
+                isUnityRegistrationComplete = true;
+            }
+            return Ok(await container.Resolve<IDBManager>().GetAllRestaurantsAsync());
         }
 
     }
