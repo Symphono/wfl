@@ -9,9 +9,6 @@ namespace Symphono.Wfl.Controllers
     [RoutePrefix("api/Restaurant")]
     public class RestaurantsController : ApiController
     {
-        IUnityContainer container = new UnityContainer();
-        bool isUnityRegistrationComplete = false;
-
         [Route("")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
@@ -20,12 +17,7 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            if (!isUnityRegistrationComplete)
-            {
-                DIContainerConfig.RegisterElements(container);
-                isUnityRegistrationComplete = true;
-            }
-            await container.Resolve<IDBManager>().InsertRestaurantAsync(restaurant);
+            await DIContainerConfig.GetConfiguredContainer().Resolve<IDBManager>().InsertRestaurantAsync(restaurant);
             return Created(restaurant.Id.ToString(), restaurant);
         }
 
@@ -37,24 +29,14 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            if (!isUnityRegistrationComplete)
-            {
-                DIContainerConfig.RegisterElements(container);
-                isUnityRegistrationComplete = true;
-            }
-            return Ok(await container.Resolve<IDBManager>().UpdateRestaurantAsync(id, restaurant));
+            return Ok(await DIContainerConfig.GetConfiguredContainer().Resolve<IDBManager>().UpdateRestaurantAsync(id, restaurant));
         }
 
         [Route("")]
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync()
         {
-            if (!isUnityRegistrationComplete)
-            {
-                DIContainerConfig.RegisterElements(container);
-                isUnityRegistrationComplete = true;
-            }
-            return Ok(await container.Resolve<IDBManager>().GetAllRestaurantsAsync());
+            return Ok(await DIContainerConfig.GetConfiguredContainer().Resolve<IDBManager>().GetAllRestaurantsAsync());
         }
 
     }
