@@ -22,7 +22,7 @@ namespace Symphono.Wfl.Controllers
             }
             if (!isUnityRegistrationComplete)
             {
-                DIContainer.RegisterElements(container);
+                DIContainerConfig.RegisterElements(container);
                 isUnityRegistrationComplete = true;
             }
             await container.Resolve<IDBManager>().InsertRestaurantAsync(restaurant);
@@ -39,7 +39,7 @@ namespace Symphono.Wfl.Controllers
             }
             if (!isUnityRegistrationComplete)
             {
-                DIContainer.RegisterElements(container);
+                DIContainerConfig.RegisterElements(container);
                 isUnityRegistrationComplete = true;
             }
             return Ok(await container.Resolve<IDBManager>().UpdateRestaurantAsync(id, restaurant));
@@ -51,7 +51,7 @@ namespace Symphono.Wfl.Controllers
         {
             if (!isUnityRegistrationComplete)
             {
-                DIContainer.RegisterElements(container);
+                DIContainerConfig.RegisterElements(container);
                 isUnityRegistrationComplete = true;
             }
             return Ok(await container.Resolve<IDBManager>().GetAllRestaurantsAsync());

@@ -3,7 +3,7 @@ using Symphono.Wfl.Database;
 
 namespace Symphono.Wfl
 {
-    public class DIContainer
+    public class DIContainerConfig
     {
         public static void RegisterElements(IUnityContainer container)
         {

@@ -167,7 +167,7 @@
     <Compile Include="Controllers\RestaurantsController.cs" />
     <Compile Include="Database\IDBManager.cs" />
     <Compile Include="Database\MongoDBManager.cs" />
-    <Compile Include="DIContainer.cs" />
+    <Compile Include="DIContainerConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
