@@ -61,5 +61,18 @@ namespace Symphono.Wfl.Database
             IAsyncCursor<RestaurantDto> task = await collection.FindAsync(r => r.Id == Id, null);
             return await task.FirstAsync();
         }
+
+        public async Task<IEnumerable<FoodOrderDto>> GetAllFoodOrdersAsync()
+        {
+            IMongoCollection<FoodOrderDto> collection = db.GetCollection<FoodOrderDto>("food-orders");
+            IAsyncCursor<FoodOrderDto> task = await collection.FindAsync(order => true, null);
+            return task.ToEnumerable<FoodOrderDto>();
+        }
+
+        public async Task InsertFoodOrderAsync(FoodOrderDto order)
+        {
+            IMongoCollection<FoodOrderDto> collection = db.GetCollection<FoodOrderDto>("food-orders");
+            await collection.InsertOneAsync(order);
+        }
     }
 }
