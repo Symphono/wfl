@@ -4,12 +4,17 @@ using System.Threading.Tasks;
 using Symphono.Wfl.Models;
 using Symphono.Wfl.Database;
 
-
 namespace Symphono.Wfl.Controllers
 {
     [RoutePrefix("api/Restaurant")]
     public class RestaurantsController : ApiController
     {
+        IDBManager DBManager { get; }
+        public RestaurantsController(IDBManager dbManager)
+        {
+            this.DBManager = dbManager;
+        }
+
         [Route("")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
@@ -18,7 +23,7 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            Restaurant r = await DatabaseProvider.GetDatabase().InsertRestaurantAsync(restaurant);
+            Restaurant r = await DBManager.InsertRestaurantAsync(restaurant);
             return Created(r.Id.ToString(), r);
         }
 
@@ -30,21 +35,21 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            return Ok(await DatabaseProvider.GetDatabase().UpdateRestaurantAsync(id, restaurant));
+            return Ok(await DBManager.UpdateRestaurantAsync(id, restaurant));
         }
 
         [Route("")]
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(await DatabaseProvider.GetDatabase().GetAllRestaurantsAsync());
+            return Ok(await DBManager.GetAllRestaurantsAsync());
         }
 
         [Route("{Id}")]
         [HttpGet]
         public async Task<IHttpActionResult> GetByIdAsync([FromUri] string Id)
         {
-            return Ok(await DatabaseProvider.GetDatabase().GetRestaurantWithIdAsync(Id));
+            return Ok(await DBManager.GetRestaurantWithIdAsync(Id));
         }
 
     }
