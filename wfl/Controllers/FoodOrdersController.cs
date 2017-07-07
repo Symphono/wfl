@@ -13,12 +13,12 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrder([FromBody] FoodOrderDto order)
         {
-            if (string.IsNullOrEmpty(order?.RestaurantId) || !(await DatabaseProvider.GetDatabase().CheckRestaurantIdAsync(order.RestaurantId)))
+            if (string.IsNullOrEmpty(order?.RestaurantId) || await DatabaseProvider.GetDatabase().GetRestaurantWithIdAsync(order.RestaurantId) == null)
             {
                 return BadRequest();
             }
-            await DatabaseProvider.GetDatabase().InsertFoodOrderAsync(order);
-            return Created(order.Id.ToString(), order);
+            FoodOrder o = await DatabaseProvider.GetDatabase().InsertFoodOrderAsync(order);
+            return Created(o.Id.ToString(), o);
         }
 
         [Route("")]

@@ -20,59 +20,60 @@ namespace Symphono.Wfl.Database
             db = client.GetDatabase("WFL");
         }
 
-        public async Task InsertRestaurantAsync(RestaurantDto r)
+        public async Task<Restaurant> InsertRestaurantAsync(RestaurantDto r)
         {
-            IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
-            await collection.InsertOneAsync(r);
-        }
-
-        public async Task<bool> CheckRestaurantIdAsync(string id)
-        {
-            IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
-            var filter = Builders<RestaurantDto>.Filter.Eq("Id", id);
-            IAsyncCursor<RestaurantDto> task = await collection.FindAsync(filter);
-            IList<RestaurantDto> queryResults = await task.ToListAsync();
-            if (queryResults.Count == 0)
+            IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
+            Restaurant restaurant = new Restaurant()
             {
-                return false;
-            }
-            return true;
+                Name = r.Name
+            };
+            await collection.InsertOneAsync(restaurant);
+            return restaurant;
         }
 
-        public async Task<RestaurantDto> UpdateRestaurantAsync(string id, RestaurantDto restaurant)
+        public async Task<Restaurant> UpdateRestaurantAsync(string id, RestaurantDto r)
         {
-            IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
-            var filter = Builders<RestaurantDto>.Filter.Eq("Id", id);
+            IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
+            var filter = Builders<Restaurant>.Filter.Eq("Id", id);
+            Restaurant restaurant = new Restaurant
+            {
+                Name = r.Name
+            };
             await collection.ReplaceOneAsync(filter, restaurant);
-            IAsyncCursor<RestaurantDto> task = await collection.FindAsync(filter);
+            IAsyncCursor<Restaurant> task = await collection.FindAsync(filter);
             return await task.FirstAsync();
         }
 
-        public async Task<IEnumerable<RestaurantDto> > GetAllRestaurantsAsync()
+        public async Task<IEnumerable<Restaurant> > GetAllRestaurantsAsync()
         {
-            IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
-            IAsyncCursor<RestaurantDto> task = await collection.FindAsync(r => true, null);
-            return task.ToEnumerable<RestaurantDto>();
+            IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
+            IAsyncCursor<Restaurant> task = await collection.FindAsync(r => true, null);
+            return task.ToEnumerable<Restaurant>();
         }
 
-        public async Task<RestaurantDto> GetRestaurantWithIdAsync(string Id)
+        public async Task<Restaurant> GetRestaurantWithIdAsync(string Id)
         {
-            IMongoCollection<RestaurantDto> collection = db.GetCollection<RestaurantDto>("restaurants");
-            IAsyncCursor<RestaurantDto> task = await collection.FindAsync(r => r.Id == Id, null);
-            return await task.FirstAsync();
+            IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
+            IAsyncCursor<Restaurant> task = await collection.FindAsync(r => r.Id == Id, null);
+            return await task.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<FoodOrderDto>> GetAllFoodOrdersAsync()
+        public async Task<IEnumerable<FoodOrder>> GetAllFoodOrdersAsync()
         {
-            IMongoCollection<FoodOrderDto> collection = db.GetCollection<FoodOrderDto>("food-orders");
-            IAsyncCursor<FoodOrderDto> task = await collection.FindAsync(order => true, null);
-            return task.ToEnumerable<FoodOrderDto>();
+            IMongoCollection<FoodOrder> collection = db.GetCollection<FoodOrder>("food-orders");
+            IAsyncCursor<FoodOrder> task = await collection.FindAsync(order => true, null);
+            return task.ToEnumerable<FoodOrder>();
         }
 
-        public async Task InsertFoodOrderAsync(FoodOrderDto order)
+        public async Task<FoodOrder> InsertFoodOrderAsync(FoodOrderDto o)
         {
-            IMongoCollection<FoodOrderDto> collection = db.GetCollection<FoodOrderDto>("food-orders");
+            IMongoCollection<FoodOrder> collection = db.GetCollection<FoodOrder>("food-orders");
+            FoodOrder order = new FoodOrder
+            {
+                RestaurantId = o.RestaurantId
+            };
             await collection.InsertOneAsync(order);
+            return order;
         }
     }
 }

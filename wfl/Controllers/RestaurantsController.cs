@@ -18,8 +18,8 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            await DatabaseProvider.GetDatabase().InsertRestaurantAsync(restaurant);
-            return Created(restaurant.Id.ToString(), restaurant);
+            Restaurant r = await DatabaseProvider.GetDatabase().InsertRestaurantAsync(restaurant);
+            return Created(r.Id.ToString(), r);
         }
 
         [Route("{id}")]
@@ -44,10 +44,6 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetByIdAsync([FromUri] string Id)
         {
-            if(!(await DatabaseProvider.GetDatabase().CheckRestaurantIdAsync(Id)))
-            {
-                return BadRequest();
-            }
             return Ok(await DatabaseProvider.GetDatabase().GetRestaurantWithIdAsync(Id));
         }
 

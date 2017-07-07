@@ -6,12 +6,11 @@ namespace Symphono.Wfl.Database
 {
     public interface IDBManager
     {
-        Task InsertRestaurantAsync(RestaurantDto r);
-        Task<bool> CheckRestaurantIdAsync(string id);
-        Task<IEnumerable<RestaurantDto>> GetAllRestaurantsAsync();
-        Task<RestaurantDto> GetRestaurantWithIdAsync(string Id);
-        Task<RestaurantDto> UpdateRestaurantAsync(string id, RestaurantDto restaurant);
-        Task<IEnumerable<FoodOrderDto>> GetAllFoodOrdersAsync();
-        Task InsertFoodOrderAsync(FoodOrderDto order);
+        Task<Restaurant> InsertRestaurantAsync(RestaurantDto r);
+        Task<IEnumerable<Restaurant>> GetAllRestaurantsAsync();
+        Task<Restaurant> GetRestaurantWithIdAsync(string Id);
+        Task<Restaurant> UpdateRestaurantAsync(string id, RestaurantDto restaurant);
+        Task<IEnumerable<FoodOrder>> GetAllFoodOrdersAsync();
+        Task<FoodOrder> InsertFoodOrderAsync(FoodOrderDto order);
     }
 }
