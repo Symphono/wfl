@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Symphono.Wfl.Controllers;
 using Microsoft.Practices.Unity;
 using Symphono.Wfl.Database;
 
@@ -9,6 +9,8 @@ namespace Symphono.Wfl
         public static void RegisterElements(IUnityContainer container)
         {
             container.RegisterType<IDBManager, MongoDBManager>();
+            container.RegisterType(typeof(RestaurantsController));
+            container.RegisterType(typeof(FoodOrdersController));
         }
     }
 }

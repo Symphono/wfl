@@ -17,8 +17,6 @@ namespace Symphono.Wfl
         {
             IUnityContainer container = new UnityContainer();
             DIContainerConfig.RegisterElements(container);
-            container.RegisterType(typeof(RestaurantsController));
-            container.RegisterType(typeof(FoodOrdersController));
             HttpConfiguration configuration = new HttpConfiguration
             {
                 DependencyResolver = new UnityDependencyResolver(container)
