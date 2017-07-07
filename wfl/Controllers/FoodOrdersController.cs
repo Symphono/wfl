@@ -9,15 +9,20 @@ namespace Symphono.Wfl.Controllers
     [RoutePrefix("api/FoodOrder")]
     public class FoodOrdersController : ApiController
     {
+        IDBManager DBManager { get; }
+        public FoodOrdersController(IDBManager dbManager)
+        {
+            this.DBManager = dbManager;
+        }
         [Route("")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrder([FromBody] FoodOrderDto order)
         {
-            if (string.IsNullOrEmpty(order?.RestaurantId) || !(await DIContainerConfig.GetConfiguredContainer().Resolve<IDBManager>().CheckRestaurantIdAsync(order.RestaurantId)))
+            if (string.IsNullOrEmpty(order?.RestaurantId) || !(await DBManager.CheckRestaurantIdAsync(order.RestaurantId)))
             {
                 return BadRequest();
             }
-            await DIContainerConfig.GetConfiguredContainer().Resolve<IDBManager>().InsertFoodOrderAsync(order);
+            await DBManager.InsertFoodOrderAsync(order);
             return Created(order.Id.ToString(), order);
         }
 
@@ -25,7 +30,7 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
-            return Ok(await DIContainerConfig.GetConfiguredContainer().Resolve<IDBManager>().GetAllFoodOrdersAsync());
+            return Ok(await DBManager.GetAllFoodOrdersAsync());
         }
     }
 }
