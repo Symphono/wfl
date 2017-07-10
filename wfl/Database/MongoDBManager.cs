@@ -24,7 +24,8 @@ namespace Symphono.Wfl.Database
             IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
             Restaurant restaurant = new Restaurant()
             {
-                Name = r.Name
+                Name = r.Name,
+                MenuLink = r.MenuLink
             };
             await collection.InsertOneAsync(restaurant);
             return restaurant;
