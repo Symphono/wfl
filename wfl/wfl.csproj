@@ -176,7 +176,6 @@
     <Compile Include="Controllers\FoodOrdersController.cs" />
     <Compile Include="Controllers\RestaurantsController.cs" />
     <Compile Include="Controllers\RootController.cs" />
-    <Compile Include="Database\DatabaseProvider.cs" />
     <Compile Include="Database\IDBManager.cs" />
     <Compile Include="Database\MongoDBManager.cs" />
     <Compile Include="DIContainerConfig.cs" />
