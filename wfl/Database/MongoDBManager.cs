@@ -2,7 +2,6 @@
 using System.Web.Configuration;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using MongoDB.Bson;
 using Symphono.Wfl.Models;
 
 namespace Symphono.Wfl.Database
