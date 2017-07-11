@@ -31,5 +31,12 @@ namespace Symphono.Wfl.Controllers
         {
             return Ok(await DBManager.GetAllFoodOrdersAsync());
         }
+
+        [Route("{id}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
+        {
+            return Ok(await DBManager.GetFoodOrderWithIdAsync(id));
+        }
     }
 }

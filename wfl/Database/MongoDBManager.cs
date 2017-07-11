@@ -52,10 +52,10 @@ namespace Symphono.Wfl.Database
             return task.ToEnumerable<Restaurant>();
         }
 
-        public async Task<Restaurant> GetRestaurantWithIdAsync(string Id)
+        public async Task<Restaurant> GetRestaurantWithIdAsync(string id)
         {
             IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
-            IAsyncCursor<Restaurant> task = await collection.FindAsync(r => r.Id == Id, null);
+            IAsyncCursor<Restaurant> task = await collection.FindAsync(r => r.Id == id, null);
             return await task.FirstOrDefaultAsync();
         }
 
@@ -64,6 +64,14 @@ namespace Symphono.Wfl.Database
             IMongoCollection<FoodOrder> collection = db.GetCollection<FoodOrder>("food-orders");
             IAsyncCursor<FoodOrder> task = await collection.FindAsync(order => true, null);
             return task.ToEnumerable<FoodOrder>();
+        }
+
+        public async Task<FoodOrder> GetFoodOrderWithIdAsync(string id)
+        {
+            IMongoCollection<FoodOrder> collection = db.GetCollection<FoodOrder>("food-orders");
+            IAsyncCursor<FoodOrder> task = await collection.FindAsync(o => o.Id == id, null);
+            return await task.FirstOrDefaultAsync();
+
         }
 
         public async Task<FoodOrder> InsertFoodOrderAsync(FoodOrderDto o)
