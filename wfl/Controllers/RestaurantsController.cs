@@ -1,8 +1,8 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 using System.Threading.Tasks;
 using Symphono.Wfl.Models;
 using Symphono.Wfl.Database;
-using Microsoft.Practices.Unity;
 
 namespace Symphono.Wfl.Controllers
 {
@@ -19,19 +19,19 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
         {
-            if (string.IsNullOrEmpty(restaurant?.Name))
+            if (string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
             {
                 return BadRequest();
             }
-            await DBManager.InsertRestaurantAsync(restaurant);
-            return Created(restaurant.Id.ToString(), restaurant);
+            Restaurant r = await DBManager.InsertRestaurantAsync(restaurant);
+            return Created(r.Id.ToString(), r);
         }
 
         [Route("{id}")]
         [HttpPut]
         public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
-            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(restaurant?.Name))
+            if (string.IsNullOrEmpty(id) || await DBManager.GetRestaurantWithIdAsync(id) == null || string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
             {
                 return BadRequest();
             }
@@ -43,6 +43,13 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> GetAsync()
         {
             return Ok(await DBManager.GetAllRestaurantsAsync());
+        }
+
+        [Route("{Id}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string Id)
+        {
+            return Ok(await DBManager.GetRestaurantWithIdAsync(Id));
         }
 
     }
