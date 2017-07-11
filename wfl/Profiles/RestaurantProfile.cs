@@ -1,9 +1,7 @@
-﻿using Hypermedia.Affordances;
-using Hypermedia.Transforms;
+﻿using Hypermedia.Transforms;
 using Hypermedia;
 using Symphono.Wfl.Controllers;
 using Symphono.Wfl.Models;
-using System.Net.Http;
 
 namespace Symphono.Wfl.Profiles
 {
