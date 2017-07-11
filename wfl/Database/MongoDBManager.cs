@@ -37,7 +37,8 @@ namespace Symphono.Wfl.Database
             var filter = Builders<Restaurant>.Filter.Eq("Id", id);
             Restaurant restaurant = new Restaurant
             {
-                Name = r.Name
+                Name = r.Name,
+                MenuLink = r.MenuLink
             };
             await collection.ReplaceOneAsync(filter, restaurant);
             IAsyncCursor<Restaurant> task = await collection.FindAsync(filter);
