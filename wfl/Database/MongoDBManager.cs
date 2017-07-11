@@ -71,7 +71,6 @@ namespace Symphono.Wfl.Database
             IMongoCollection<FoodOrder> collection = db.GetCollection<FoodOrder>("food-orders");
             IAsyncCursor<FoodOrder> task = await collection.FindAsync(o => o.Id == id, null);
             return await task.FirstOrDefaultAsync();
-
         }
 
         public async Task<FoodOrder> InsertFoodOrderAsync(FoodOrderDto o)
