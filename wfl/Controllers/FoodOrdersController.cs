@@ -5,7 +5,7 @@ using Symphono.Wfl.Database;
 
 namespace Symphono.Wfl.Controllers
 {
-    [RoutePrefix("api/FoodOrder")]
+    [RoutePrefix("api/foodorder")]
     public class FoodOrdersController : ApiController
     {
         IDBManager DBManager { get; }
