@@ -28,7 +28,7 @@ namespace Symphono.Wfl.Profiles
                )
                .When((dto, request) => 
                     dto.MenuLink != null, 
-                            whenConfig => whenConfig
+                    whenConfig => whenConfig
                             .UseLinkTransform(links => links
                                 .WithLink(l => l
                                 .WithRelation("menu")
