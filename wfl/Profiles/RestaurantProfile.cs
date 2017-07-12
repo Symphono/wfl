@@ -1,5 +1,6 @@
 ﻿using Hypermedia.Transforms;
 using Hypermedia;
+using Hypermedia.Affordances;
 using Symphono.Wfl.Controllers;
 using Symphono.Wfl.Models;
 
@@ -24,6 +25,23 @@ namespace Symphono.Wfl.Profiles
                         .WithLink<Restaurant, RestaurantsController>(
                             r => rc => rc.GetByIdAsync(r.Id)
                         )
+                    )
+               )
+               .UseActionTransform(actions => actions
+                    .WithName("edit-restaurant")
+                    .WithRepresentation("restaurant")
+                    .WithMethod(ActionMethod.Replace)
+                    .WithEncoding("application/x-www-form-urlencoded")
+                    .WithLink<Restaurant, RestaurantsController>(r => c => c.UpdateAsync(null, r.Id))
+                    .WithField(x => x
+                        .WithName(nameof(RestaurantDto.Name))
+                        .WithType("text")
+                        .WithTitle("Name")
+                    )
+                    .WithField(x => x
+                        .WithName(nameof(RestaurantDto.MenuLink))
+                        .WithType("text")
+                        .WithTitle("Menu Link")
                     )
                )
                .When((dto, request) => 
