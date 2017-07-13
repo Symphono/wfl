@@ -17,7 +17,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrder([FromBody] FoodOrderDto order)
         {
-            if (string.IsNullOrEmpty(order?.RestaurantId) || await DBManager.GetEntityWithIdAsync<Restaurant>(order.RestaurantId) == null)
+            if (string.IsNullOrEmpty(order?.RestaurantId) || await DBManager.GetEntityByIdAsync<Restaurant>(order.RestaurantId) == null)
             {
                 return BadRequest();
             }

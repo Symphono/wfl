@@ -36,7 +36,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
-            if (string.IsNullOrEmpty(id) || await DBManager.GetEntityWithIdAsync<Restaurant>(id) == null || string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
+            if (string.IsNullOrEmpty(id) || await DBManager.GetEntityByIdAsync<Restaurant>(id) == null || string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
             {
                 return BadRequest();
             }
@@ -59,7 +59,7 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
         {
-            return Ok(await DBManager.GetEntityWithIdAsync<Restaurant>(id));
+            return Ok(await DBManager.GetEntityByIdAsync<Restaurant>(id));
         }
 
     }

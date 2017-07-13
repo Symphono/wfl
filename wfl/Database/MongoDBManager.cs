@@ -66,7 +66,7 @@ namespace Symphono.Wfl.Database
             return task.ToEnumerable();
         }
 
-        public async Task<T> GetEntityWithIdAsync<T>(string id) where T: IEntity, new()
+        public async Task<T> GetEntityByIdAsync<T>(string id) where T: IEntity, new()
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
             IAsyncCursor<T> task = await collection.FindAsync(e => e.Id == id, null);
