@@ -23,7 +23,12 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            Restaurant r = await DBManager.InsertRestaurantAsync(restaurant);
+            Restaurant r = new Restaurant()
+            {
+                Name = restaurant.Name,
+                MenuLink = restaurant.MenuLink
+            };
+            r = await DBManager.InsertEntityAsync(r);
             return Created(r.Id.ToString(), r);
         }
 
@@ -31,25 +36,30 @@ namespace Symphono.Wfl.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
-            if (string.IsNullOrEmpty(id) || await DBManager.GetRestaurantWithIdAsync(id) == null || string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
+            if (string.IsNullOrEmpty(id) || await DBManager.GetEntityWithIdAsync<Restaurant>(id) == null || string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
             {
                 return BadRequest();
             }
-            return Ok(await DBManager.UpdateRestaurantAsync(id, restaurant));
+            Restaurant r = new Restaurant()
+            {
+                Name = restaurant.Name,
+                MenuLink = restaurant.MenuLink
+            };
+            return Ok(await DBManager.UpdateEntityAsync(id, r));
         }
 
         [Route("")]
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(await DBManager.GetAllRestaurantsAsync());
+            return Ok(await DBManager.GetAllEntitiesAsync<Restaurant>());
         }
 
         [Route("{Id}")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string Id)
+        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
         {
-            return Ok(await DBManager.GetRestaurantWithIdAsync(Id));
+            return Ok(await DBManager.GetEntityWithIdAsync<Restaurant>(id));
         }
 
     }

@@ -3,6 +3,7 @@ using System.Web.Configuration;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using Symphono.Wfl.Models;
+using System;
 
 namespace Symphono.Wfl.Database
 {
@@ -19,62 +20,66 @@ namespace Symphono.Wfl.Database
             db = client.GetDatabase("WFL");
         }
 
-        public async Task<Restaurant> InsertRestaurantAsync(RestaurantDto r)
+        private string GenerateCollectionName<T>() where T: new()
         {
-            IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
-            Restaurant restaurant = new Restaurant()
+            T t = new T();
+            string type = t.GetType().ToString();
+            string collectionName = "";
+            bool started = true;
+            foreach(char c in type)
             {
-                Name = r.Name,
-                MenuLink = r.MenuLink
-            };
-            await collection.InsertOneAsync(restaurant);
-            return restaurant;
+                if(c == '.')
+                {
+                    collectionName = "";
+                    started = false;
+                }
+                else if (char.IsUpper(c))
+                {
+                    if (started == true)
+                    {
+                        collectionName += '-';
+                    }
+                    else
+                        started = true;
+                    collectionName += char.ToLower(c);
+                }
+                else
+                    collectionName += c;
+            }
+            collectionName += 's';
+            Console.WriteLine(collectionName);
+            return collectionName;
+
         }
 
-        public async Task<Restaurant> UpdateRestaurantAsync(string id, RestaurantDto r)
+        public async Task<T> InsertEntityAsync<T>(T entity) where T: IEntity, new()
         {
-            IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
-            var filter = Builders<Restaurant>.Filter.Eq("Id", id);
-            Restaurant restaurant = new Restaurant
-            {
-                Name = r.Name,
-                MenuLink = r.MenuLink
-            };
-            await collection.ReplaceOneAsync(filter, restaurant);
-            IAsyncCursor<Restaurant> task = await collection.FindAsync(filter);
-            return await task.FirstAsync();
+            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            await collection.InsertOneAsync(entity);
+            return entity;
         }
 
-        public async Task<IEnumerable<Restaurant> > GetAllRestaurantsAsync()
+        public async Task<IEnumerable<T>> GetAllEntitiesAsync<T>() where T: IEntity, new()
         {
-            IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
-            IAsyncCursor<Restaurant> task = await collection.FindAsync(r => true, null);
-            return task.ToEnumerable<Restaurant>();
+            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            IAsyncCursor<T> task = await collection.FindAsync(e => true, null);
+            return task.ToEnumerable();
         }
 
-        public async Task<Restaurant> GetRestaurantWithIdAsync(string Id)
+        public async Task<T> GetEntityWithIdAsync<T>(string id) where T: IEntity, new()
         {
-            IMongoCollection<Restaurant> collection = db.GetCollection<Restaurant>("restaurants");
-            IAsyncCursor<Restaurant> task = await collection.FindAsync(r => r.Id == Id, null);
+            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            IAsyncCursor<T> task = await collection.FindAsync(e => e.Id == id, null);
             return await task.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<FoodOrder>> GetAllFoodOrdersAsync()
+        public async Task<T> UpdateEntityAsync<T>(string id, T entity) where T : IEntity, new()
         {
-            IMongoCollection<FoodOrder> collection = db.GetCollection<FoodOrder>("food-orders");
-            IAsyncCursor<FoodOrder> task = await collection.FindAsync(order => true, null);
-            return task.ToEnumerable<FoodOrder>();
-        }
-
-        public async Task<FoodOrder> InsertFoodOrderAsync(FoodOrderDto o)
-        {
-            IMongoCollection<FoodOrder> collection = db.GetCollection<FoodOrder>("food-orders");
-            FoodOrder order = new FoodOrder
-            {
-                RestaurantId = o.RestaurantId
-            };
-            await collection.InsertOneAsync(order);
-            return order;
+            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            var filter = Builders<T>.Filter.Eq("Id", id);
+            await collection.ReplaceOneAsync(filter, entity);
+            IAsyncCursor<T> task = await collection.FindAsync(filter);
+            return await task.FirstAsync();
         }
     }
 }

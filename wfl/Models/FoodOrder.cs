@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace Symphono.Wfl.Models
 {
-    public class FoodOrder
+    public class FoodOrder: IEntity
     {
         [BsonIgnoreIfNull]
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]

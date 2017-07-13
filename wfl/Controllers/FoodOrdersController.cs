@@ -17,11 +17,15 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrder([FromBody] FoodOrderDto order)
         {
-            if (string.IsNullOrEmpty(order?.RestaurantId) || await DBManager.GetRestaurantWithIdAsync(order.RestaurantId) == null)
+            if (string.IsNullOrEmpty(order?.RestaurantId) || await DBManager.GetEntityWithIdAsync<Restaurant>(order.RestaurantId) == null)
             {
                 return BadRequest();
             }
-            FoodOrder o = await DBManager.InsertFoodOrderAsync(order);
+            FoodOrder o = new FoodOrder()
+            {
+                RestaurantId = order.RestaurantId
+            };
+            o = await DBManager.InsertEntityAsync(o);
             return Created(o.Id.ToString(), o);
         }
 
@@ -29,7 +33,7 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
-            return Ok(await DBManager.GetAllFoodOrdersAsync());
+            return Ok(await DBManager.GetAllEntitiesAsync<FoodOrder>());
         }
     }
 }
