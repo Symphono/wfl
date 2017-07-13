@@ -23,17 +23,13 @@ namespace Symphono.Wfl.Database
         private string GenerateCollectionName<T>() where T: new()
         {
             T t = new T();
-            string type = t.GetType().ToString();
+            string type = t.GetType().Name;
+            Console.WriteLine(type);
             string collectionName = "";
-            bool started = true;
+            bool started = false;
             foreach(char c in type)
             {
-                if(c == '.')
-                {
-                    collectionName = "";
-                    started = false;
-                }
-                else if (char.IsUpper(c))
+                if (char.IsUpper(c))
                 {
                     if (started == true)
                     {
