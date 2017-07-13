@@ -20,11 +20,10 @@ namespace Symphono.Wfl.Database
             db = client.GetDatabase("WFL");
         }
 
-        private string GenerateCollectionName<T>() where T: new()
+        private string GenerateCollectionName<T>()
         {
-            T t = new T();
-            string type = t.GetType().Name;
-            Console.WriteLine(type);
+            Type entityType = typeof(T);
+            string type = entityType.Name;
             string collectionName = "";
             bool started = false;
             foreach(char c in type)
@@ -43,33 +42,32 @@ namespace Symphono.Wfl.Database
                     collectionName += c;
             }
             collectionName += 's';
-            Console.WriteLine(collectionName);
             return collectionName;
 
         }
 
-        public async Task<T> InsertEntityAsync<T>(T entity) where T: IEntity, new()
+        public async Task<T> InsertEntityAsync<T>(T entity) where T: IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
             await collection.InsertOneAsync(entity);
             return entity;
         }
 
-        public async Task<IEnumerable<T>> GetAllEntitiesAsync<T>() where T: IEntity, new()
+        public async Task<IEnumerable<T>> GetAllEntitiesAsync<T>() where T: IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
             IAsyncCursor<T> task = await collection.FindAsync(e => true, null);
             return task.ToEnumerable();
         }
 
-        public async Task<T> GetEntityByIdAsync<T>(string id) where T: IEntity, new()
+        public async Task<T> GetEntityByIdAsync<T>(string id) where T: IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
             IAsyncCursor<T> task = await collection.FindAsync(e => e.Id == id, null);
             return await task.FirstOrDefaultAsync();
         }
 
-        public async Task<T> UpdateEntityAsync<T>(string id, T entity) where T : IEntity, new()
+        public async Task<T> UpdateEntityAsync<T>(string id, T entity) where T : IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
             var filter = Builders<T>.Filter.Eq("Id", id);
