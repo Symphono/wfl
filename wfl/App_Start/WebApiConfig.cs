@@ -1,4 +1,9 @@
 ﻿using System.Web.Http;
+using Drum;
+using Hypermedia;
+using Hypermedia.Transforms;
+using Hypermedia.Siren;
+using Symphono.Wfl.Models;
 
 namespace Symphono.Wfl
 {
@@ -6,12 +11,11 @@ namespace Symphono.Wfl
     {
         public static void Register(HttpConfiguration config)
         {
-            config.MapHttpAttributeRoutes();
+            config.EnableHypermedia()
+                .RegisterDefaultTransform(new ReflectiveTransform());
 
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/Restaurant"
-            );
+            config.RegisterHypermediaProfiles(typeof(Root).Assembly);
+            config.Formatters.Insert(0, new SirenFormatter());
         }
     }
 }

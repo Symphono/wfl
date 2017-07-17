@@ -47,9 +47,9 @@ namespace Symphono.Wfl.Controllers
 
         [Route("{Id}")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string Id)
+        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
         {
-            return Ok(await DBManager.GetRestaurantWithIdAsync(Id));
+            return Ok(await DBManager.GetRestaurantWithIdAsync(id));
         }
 
     }

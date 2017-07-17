@@ -15,7 +15,7 @@ namespace Symphono.Wfl.Controllers
         }
         [Route("")]
         [HttpPost]
-        public async Task<IHttpActionResult> CreateFoodOrder([FromBody] FoodOrderDto order)
+        public async Task<IHttpActionResult> CreateFoodOrderAsync([FromBody] FoodOrderDto order)
         {
             if (string.IsNullOrEmpty(order?.RestaurantId) || await DBManager.GetRestaurantWithIdAsync(order.RestaurantId) == null)
             {
@@ -27,9 +27,16 @@ namespace Symphono.Wfl.Controllers
 
         [Route("")]
         [HttpGet]
-        public async Task<IHttpActionResult> Get()
+        public async Task<IHttpActionResult> GetAsync()
         {
             return Ok(await DBManager.GetAllFoodOrdersAsync());
+        }
+
+        [Route("{id}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
+        {
+            return Ok(await DBManager.GetFoodOrderWithIdAsync(id));
         }
     }
 }
