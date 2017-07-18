@@ -1,4 +1,5 @@
 ﻿using Hypermedia.Transforms;
+using Hypermedia.Affordances;
 using Hypermedia;
 using Symphono.Wfl.Controllers;
 using Symphono.Wfl.Models;
@@ -25,7 +26,30 @@ namespace Symphono.Wfl.Profiles
                             o => rc => rc.GetByIdAsync(o.Id)
                         )
                     )
-                 );
+                 )
+                 .UseActionTransform(actions => actions
+                    .WithName("create-menu-selection")
+                    .WithRepresentation("menu-selection")
+                    .WithMethod(ActionMethod.Create)
+                    .WithEncoding("application/x-www-form-urlencoded")
+                    .WithLink<FoodOrder, MenuSelectionsController>(o => mc => mc.CreateMenuSelectionAsync(null))
+                    .WithField(x => x
+                        .WithName(nameof(MenuSelectionDto.OrdererName))
+                        .WithType("text")
+                        .WithTitle("Orderer Name")
+                    )
+                    .WithField(x => x
+                        .WithName(nameof(MenuSelectionDto.Description))
+                        .WithType("text")
+                        .WithTitle("Description")
+                    )
+                    .WithField(x => x
+                        .WithName(nameof(MenuSelectionDto.FoodOrderId))
+                        .WithType("text")
+                        .WithTitle("Food Order Id")
+                        .WithValue(o => o.Id)
+                    )
+               );
         }
     }
 }
