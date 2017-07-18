@@ -20,7 +20,11 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(await DBManager.GetAllEntitiesAsync<MenuSelection>());
+            MenuSelectionCollection menuSelectionCollection = new MenuSelectionCollection()
+            {
+                MenuSelections = await DBManager.GetAllEntitiesAsync<MenuSelection>()
+            };
+            return Ok(menuSelectionCollection);
         }
 
         [Route("{id}")]

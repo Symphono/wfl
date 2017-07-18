@@ -187,11 +187,13 @@
     <Compile Include="Models\FoodOrderDto.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\MenuSelection.cs" />
+    <Compile Include="Models\MenuSelectionCollection.cs" />
     <Compile Include="Models\MenuSelectionDto.cs" />
     <Compile Include="Models\Restaurant.cs" />
     <Compile Include="Models\RestaurantDto.cs" />
     <Compile Include="Models\Root.cs" />
     <Compile Include="Profiles\FoodOrderProfile.cs" />
+    <Compile Include="Profiles\MenuSelectionCollectionProfile.cs" />
     <Compile Include="Profiles\MenuSelectionProfile.cs" />
     <Compile Include="Profiles\RestaurantProfile.cs" />
     <Compile Include="Profiles\RootProfile.cs" />
