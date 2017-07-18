@@ -23,6 +23,13 @@ namespace Symphono.Wfl.Controllers
             return Ok(await DBManager.GetAllEntitiesAsync<MenuSelection>());
         }
 
+        [Route("{id}")]
+        [HttpGet]
+        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
+        {
+            return Ok(await DBManager.GetEntityByIdAsync<MenuSelection>(id));
+        }
+
         [Route("")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateMenuSelectionAsync(MenuSelectionDto selection)
