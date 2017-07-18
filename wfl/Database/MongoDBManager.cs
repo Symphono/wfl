@@ -68,6 +68,12 @@ namespace Symphono.Wfl.Database
             IAsyncCursor<T> task = await collection.FindAsync(filter, null);
             return await task.FirstOrDefaultAsync();
         }
+        public async Task<T> DeleteEntityByIdAsync<T>(string id) where T: IEntity
+        {
+            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            var filter = Builders<T>.Filter.Eq("Id", id);
+            return await collection.FindOneAndDeleteAsync(filter, null);
+        }
         public async Task<IEnumerable<T>> GetEntitiesByDateAsync<T>(DateTime date) where T : IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
