@@ -37,15 +37,18 @@ namespace Symphono.Wfl.Profiles
                     .WithField(x => x
                         .WithName(nameof(MenuSelectionDto.OrdererName))
                         .WithType("text")
-                        .WithTitle("Orderer Name"))
+                        .WithTitle("Orderer Name")
+                    )
                     .WithField(x => x
                         .WithName(nameof(MenuSelectionDto.Description))
                         .WithType("text")
-                        .WithTitle("Description"))
+                        .WithTitle("Description")
+                    )
                     .WithField(x => x
                         .WithName(nameof(MenuSelectionDto.FoodOrderId))
                         .WithType("text")
-                        .WithTitle("Food Order Id"))
+                        .WithTitle("Food Order Id")
+                    )
                );
         }
     }
