@@ -2,6 +2,7 @@
 using System.Web.Configuration;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using Symphono.Wfl.Models;
 using System;
 
@@ -63,8 +64,20 @@ namespace Symphono.Wfl.Database
         public async Task<T> GetEntityByIdAsync<T>(string id) where T: IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
-            IAsyncCursor<T> task = await collection.FindAsync(e => e.Id == id, null);
+            var filter = Builders<T>.Filter.Eq("Id", id);
+            IAsyncCursor<T> task = await collection.FindAsync(filter, null);
             return await task.FirstOrDefaultAsync();
+        }
+        public async Task<IEnumerable<T>> GetEntitiesByDateAsync<T>(DateTime date) where T : IEntity
+        {
+            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            var lowerBound = Builders<T>.Filter.Gt("Id", new ObjectId(date.Date, 0, 0, 0));
+            var upperBound = Builders<T>.Filter.Lt("Id", new ObjectId(date.Date.AddDays(1), 0, 0, 0));
+            var bounds = new FilterDefinition<T>[] { lowerBound, upperBound };
+            var filter = Builders<T>.Filter.And(bounds);
+            
+            IAsyncCursor<T> task = await collection.FindAsync(lowerBound, null);
+            return task.ToEnumerable();
         }
 
         public async Task<T> UpdateEntityAsync<T>(string id, T entity) where T : IEntity
