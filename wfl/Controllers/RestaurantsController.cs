@@ -9,7 +9,7 @@ namespace Symphono.Wfl.Controllers
     [RoutePrefix("api/Restaurant")]
     public class RestaurantsController : ApiController
     {
-        IDBManager dbManager { get; }
+        private IDBManager dbManager { get; }
         public RestaurantsController(IDBManager dbManager)
         {
             this.dbManager = dbManager;

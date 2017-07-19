@@ -11,7 +11,7 @@ namespace Symphono.Wfl.Controllers
     [RoutePrefix("api/menu-selection")]
     public class MenuSelectionsController : ApiController
     {
-        IDBManager dbManager { get; }
+        private IDBManager dbManager { get; }
         public MenuSelectionsController(IDBManager dbManager) {
            this.dbManager = dbManager;
         }
