@@ -11,9 +11,9 @@ namespace Symphono.Wfl.Controllers
     [RoutePrefix("api/menu-selection")]
     public class MenuSelectionsController : ApiController
     {
-        IDBManager DBManager;
+        IDBManager dbManager { get; }
         public MenuSelectionsController(IDBManager dbManager) {
-           this.DBManager = dbManager;
+           this.dbManager = dbManager;
         }
 
         [Route("")]
@@ -22,7 +22,7 @@ namespace Symphono.Wfl.Controllers
         {
             MenuSelectionCollection menuSelectionCollection = new MenuSelectionCollection()
             {
-                MenuSelections = await DBManager.GetAllEntitiesAsync<MenuSelection>()
+                MenuSelections = await dbManager.GetAllEntitiesAsync<MenuSelection>()
             };
             return Ok(menuSelectionCollection);
         }
@@ -31,15 +31,15 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
         {
-            return Ok(await DBManager.GetEntityByIdAsync<MenuSelection>(id));
+            return Ok(await dbManager.GetEntityByIdAsync<MenuSelection>(id));
         }
 
         [Route("")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateMenuSelectionAsync(MenuSelectionDto selection)
         {
-            IEnumerable<FoodOrder> todaysOrders = await DBManager.GetEntitiesByDateAsync<FoodOrder>(DateTime.Now);
-            if (todaysOrders.Any() == false || string.IsNullOrEmpty(selection?.Description) || string.IsNullOrEmpty(selection?.FoodOrderId) || await DBManager.GetEntityByIdAsync<FoodOrder>(selection.FoodOrderId) == null)
+            IEnumerable<FoodOrder> todaysOrders = await dbManager.GetEntitiesByDateAsync<FoodOrder>(DateTime.Now);
+            if (todaysOrders.Any() == false || string.IsNullOrEmpty(selection?.Description) || string.IsNullOrEmpty(selection?.FoodOrderId) || await dbManager.GetEntityByIdAsync<FoodOrder>(selection.FoodOrderId) == null)
             {
                 return BadRequest();
             }
@@ -49,7 +49,7 @@ namespace Symphono.Wfl.Controllers
                 Description = selection.Description,
                 FoodOrderId = selection.FoodOrderId
             };
-            s = await DBManager.InsertEntityAsync(s);
+            s = await dbManager.InsertEntityAsync(s);
             return Created(s.Id.ToString(), s);
         }
     }
