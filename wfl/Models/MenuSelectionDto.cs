@@ -4,6 +4,5 @@
     {
         public string OrdererName { get; set; }
         public string Description { get; set; }
-        public string FoodOrderId { get; set; }
     }
 }
