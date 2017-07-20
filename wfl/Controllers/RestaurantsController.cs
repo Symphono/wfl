@@ -6,13 +6,13 @@ using Symphono.Wfl.Database;
 
 namespace Symphono.Wfl.Controllers
 {
-    [RoutePrefix("api/Restaurant")]
+    [RoutePrefix("api/restaurant")]
     public class RestaurantsController : ApiController
     {
-        IDBManager DBManager { get; }
+        private IDBManager dbManager { get; }
         public RestaurantsController(IDBManager dbManager)
         {
-            this.DBManager = dbManager;
+            this.dbManager = dbManager;
         }
 
         [Route("")]
@@ -28,7 +28,7 @@ namespace Symphono.Wfl.Controllers
                 Name = restaurant.Name,
                 MenuLink = restaurant.MenuLink
             };
-            r = await DBManager.InsertEntityAsync(r);
+            r = await dbManager.InsertEntityAsync(r);
             return Created(r.Id.ToString(), r);
         }
 
@@ -36,7 +36,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
-            if (string.IsNullOrEmpty(id) || await DBManager.GetEntityByIdAsync<Restaurant>(id) == null || string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
+            if (string.IsNullOrEmpty(id) || await dbManager.GetEntityByIdAsync<Restaurant>(id) == null || string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
             {
                 return BadRequest();
             }
@@ -45,21 +45,21 @@ namespace Symphono.Wfl.Controllers
                 Name = restaurant.Name,
                 MenuLink = restaurant.MenuLink
             };
-            return Ok(await DBManager.UpdateEntityAsync(id, r));
+            return Ok(await dbManager.UpdateEntityAsync(id, r));
         }
 
         [Route("")]
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(await DBManager.GetAllEntitiesAsync<Restaurant>());
+            return Ok(await dbManager.GetAllEntitiesAsync<Restaurant>());
         }
 
         [Route("{Id}")]
         [HttpGet]
         public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
         {
-            return Ok(await DBManager.GetEntityByIdAsync<Restaurant>(id));
+            return Ok(await dbManager.GetEntityByIdAsync<Restaurant>(id));
         }
 
     }

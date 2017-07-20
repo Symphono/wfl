@@ -16,7 +16,6 @@ namespace Symphono.Wfl.Profiles
                 )
                 .UsePropertiesTransform(properties => properties
                     .WithProperty(s => s.Id)
-                    .WithProperty(s => s.FoodOrderId)
                     .WithProperty(s => s.Description)
                     .WithProperty(s => s.OrdererName)
                 )
@@ -28,22 +27,13 @@ namespace Symphono.Wfl.Profiles
                             s => mc => mc.GetByIdAsync(s.Id)
                         )
                     )
-                 )
-                .UseLinkTransform(links => links
-                    .WithLink(l => l
-                        .WithRelation("food-order")
-                        .WithRepresentation("food-order")
-                        .WithLink<MenuSelection, FoodOrdersController>(
-                            s => fc => fc.GetByIdAsync(s.FoodOrderId)
-                        )
-                    )
-                 )
-                 .UseActionTransform(actions => actions
+                )
+                .UseActionTransform(actions => actions
                     .WithName("delete-menu-selection")
                     .WithMethod(ActionMethod.Delete)
                     .WithEncoding("application/x-www-form-urlencoded")
                     .WithLink<MenuSelection, MenuSelectionsController>(s => mc => mc.DeleteByIdAsync(s.Id))
-               );
+                );
         }
     }
 }

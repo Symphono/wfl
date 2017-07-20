@@ -64,7 +64,7 @@ namespace Symphono.Wfl.Database
         public async Task<T> GetEntityByIdAsync<T>(string id) where T: IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
-            var filter = Builders<T>.Filter.Eq("Id", id);
+            var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
             IAsyncCursor<T> task = await collection.FindAsync(filter, null);
             return await task.FirstOrDefaultAsync();
         }
@@ -77,8 +77,8 @@ namespace Symphono.Wfl.Database
         public async Task<IEnumerable<T>> GetEntitiesByDateAsync<T>(DateTime date) where T : IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
-            var lowerBound = Builders<T>.Filter.Gt("Id", new ObjectId(date.Date, 0, 0, 0));
-            var upperBound = Builders<T>.Filter.Lt("Id", new ObjectId(date.Date.AddDays(1), 0, 0, 0));
+            var lowerBound = Builders<T>.Filter.Gt(nameof(IEntity.Id), new ObjectId(date.Date, 0, 0, 0));
+            var upperBound = Builders<T>.Filter.Lt(nameof(IEntity.Id), new ObjectId(date.Date.AddDays(1), 0, 0, 0));
             var bounds = new FilterDefinition<T>[] { lowerBound, upperBound };
             var filter = Builders<T>.Filter.And(bounds);
             
@@ -89,7 +89,7 @@ namespace Symphono.Wfl.Database
         public async Task<T> UpdateEntityAsync<T>(string id, T entity) where T : IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
-            var filter = Builders<T>.Filter.Eq("Id", id);
+            var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
             await collection.ReplaceOneAsync(filter, entity);
             IAsyncCursor<T> task = await collection.FindAsync(filter);
             return await task.FirstAsync();

@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
+using System.Collections.Generic;
 
 namespace Symphono.Wfl.Models
 {
@@ -9,5 +10,6 @@ namespace Symphono.Wfl.Models
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public string Id { get; set; }
         public string RestaurantId { get; set; }
+        public IEnumerable<MenuSelection> MenuSelections { get; set; }
     }
 }

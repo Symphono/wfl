@@ -18,6 +18,14 @@ namespace Symphono.Wfl.Profiles
                     .WithProperty(o => o.Id)
                     .WithProperty(o => o.RestaurantId)
                 )
+                .UseEnumerableEmbeddedSubEntityTransform(
+                    o => o.MenuSelections,
+                    embedded => embedded
+                         .WithRelation("item")
+                         .WithConfiguration(embeddedConfiguration => embeddedConfiguration
+                             .UseProfile<MenuSelection, MenuSelectionProfile>()
+                        )
+               )
                 .UseLinkTransform(links => links
                     .WithLink(l => l
                         .WithRelation("self")
@@ -32,7 +40,7 @@ namespace Symphono.Wfl.Profiles
                     .WithRepresentation("menu-selection")
                     .WithMethod(ActionMethod.Create)
                     .WithEncoding("application/x-www-form-urlencoded")
-                    .WithLink<FoodOrder, MenuSelectionsController>(o => mc => mc.CreateMenuSelectionAsync(null))
+                    .WithLink<FoodOrder, MenuSelectionsController>(o => mc => mc.CreateMenuSelectionAsync(null, o.Id))
                     .WithField(x => x
                         .WithName(nameof(MenuSelectionDto.OrdererName))
                         .WithType("text")
@@ -42,12 +50,6 @@ namespace Symphono.Wfl.Profiles
                         .WithName(nameof(MenuSelectionDto.Description))
                         .WithType("text")
                         .WithTitle("Description")
-                    )
-                    .WithField(x => x
-                        .WithName(nameof(MenuSelectionDto.FoodOrderId))
-                        .WithType("text")
-                        .WithTitle("Food Order Id")
-                        .WithValue(o => o.Id)
                     )
                );
         }
