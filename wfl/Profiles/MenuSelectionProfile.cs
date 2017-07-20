@@ -18,6 +18,7 @@ namespace Symphono.Wfl.Profiles
                     .WithProperty(s => s.Id)
                     .WithProperty(s => s.Description)
                     .WithProperty(s => s.OrdererName)
+                    .WithProperty(s => s.FoodOrderId)
                 )
                 .UseLinkTransform(links => links
                     .WithLink(l => l

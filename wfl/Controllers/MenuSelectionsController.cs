@@ -56,6 +56,7 @@ namespace Symphono.Wfl.Controllers
             {
                 OrdererName = selection.OrdererName,
                 Description = selection.Description,
+                FoodOrderId = foodOrderId
             };
             s = await dbManager.InsertEntityAsync(s);
 
