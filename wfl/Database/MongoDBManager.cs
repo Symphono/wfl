@@ -94,5 +94,10 @@ namespace Symphono.Wfl.Database
             IAsyncCursor<T> task = await collection.FindAsync(filter);
             return await task.FirstAsync();
         }
+
+        public DateTime GetCreationTime(string id)
+        {
+            return new ObjectId(id).CreationTime;
+        }
     }
 }
