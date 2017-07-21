@@ -27,13 +27,7 @@ namespace Symphono.Wfl.Profiles
                         )
                     )
                  )
-                .UseLinkTransform(links => links
-                    .WithLink(l => l
-                        .WithRelation("menu")
-                        .WithTargetGenerator((r, h) => r.MenuLink)
-                    )
-               )
-               .UseActionTransform(actions => actions
+                 .UseActionTransform(actions => actions
                     .WithName("create-food-order")
                     .WithRepresentation("food-order")
                     .WithMethod(ActionMethod.Create)
@@ -45,7 +39,17 @@ namespace Symphono.Wfl.Profiles
                         .WithTitle("Restaurant Id")
                         .WithValue(r => r.Id)
                     )
-                );
+               )
+               .When((dto, request) =>
+                    dto.MenuLink != null,
+                    whenConfig => whenConfig
+                            .UseLinkTransform(links => links
+                                .WithLink(l => l
+                                .WithRelation("menu")
+                                .WithTargetGenerator((r, h) => r.MenuLink)
+                                )
+                            )
+               );
         }
     }
 }
