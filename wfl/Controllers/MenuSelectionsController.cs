@@ -15,7 +15,7 @@ namespace Symphono.Wfl.Controllers
            this.dbManager = dbManager;
         }
 
-        [Route("api/FoodOrder/{foodOrderId}/menu-selection")]
+        [Route("api/food-order/{foodOrderId}/menu-selection")]
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync([FromUri] string foodOrderId)
         {
@@ -48,7 +48,7 @@ namespace Symphono.Wfl.Controllers
             return Ok(await dbManager.DeleteEntityByIdAsync<MenuSelection>(id));
         }
 
-        [Route("api/FoodOrder/{foodOrderId}/menu-selection")]
+        [Route("api/food-order/{foodOrderId}/menu-selection")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateMenuSelectionAsync(MenuSelectionDto selection, [FromUri] string foodOrderId)
         {
