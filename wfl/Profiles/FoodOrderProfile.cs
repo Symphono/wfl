@@ -31,7 +31,7 @@ namespace Symphono.Wfl.Profiles
                         .WithRelation("self")
                         .WithRepresentation("food-order")
                         .WithLink<FoodOrder, FoodOrdersController>(
-                            o => rc => rc.GetByIdAsync(o.Id)
+                            o => fc => fc.GetByIdAsync(o.Id)
                         )
                     )
                  )
@@ -51,7 +51,16 @@ namespace Symphono.Wfl.Profiles
                         .WithType("text")
                         .WithTitle("Description")
                     )
-               );
+                )
+                .UseLinkTransform(links => links
+                    .WithLink(l => l
+                        .WithRelation("restaurant")
+                        .WithRepresentation("restaurant")
+                        .WithLink<FoodOrder, RestaurantsController>(
+                            o => rc => rc.GetByIdAsync(o.RestaurantId)
+                        )
+                    )
+                );
         }
     }
 }

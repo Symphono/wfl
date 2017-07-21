@@ -52,7 +52,11 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(await dbManager.GetAllEntitiesAsync<Restaurant>());
+            RestaurantCollection restaurantCollection = new RestaurantCollection()
+            {
+                Restaurants = await dbManager.GetAllEntitiesAsync<Restaurant>()
+            };
+            return Ok(restaurantCollection);
         }
 
         [Route("{Id}")]
