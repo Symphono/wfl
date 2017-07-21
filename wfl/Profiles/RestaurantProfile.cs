@@ -25,12 +25,16 @@ namespace Symphono.Wfl.Profiles
                             r => rc => rc.GetByIdAsync(r.Id)
                         )
                     )
-                 )
-                .UseLinkTransform(links => links
-                    .WithLink(l => l
-                        .WithRelation("menu")
-                        .WithTargetGenerator((r, h) => r.MenuLink)
-                    )
+               )
+               .When((dto, request) => 
+                    dto.MenuLink != null, 
+                    whenConfig => whenConfig
+                            .UseLinkTransform(links => links
+                                .WithLink(l => l
+                                .WithRelation("menu")
+                                .WithTargetGenerator((r, h) => r.MenuLink)
+                                )
+                            )
                );
         }
     }
