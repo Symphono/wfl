@@ -40,8 +40,8 @@ namespace Symphono.Wfl.Profiles
                         .WithValue(r => r.Id)
                     )
                )
-               .When((dto, request) =>
-                    dto.MenuLink != null,
+               .When((dto, request) => 
+                    dto.MenuLink != null, 
                     whenConfig => whenConfig
                             .UseLinkTransform(links => links
                                 .WithLink(l => l
