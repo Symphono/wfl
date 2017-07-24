@@ -35,7 +35,7 @@ namespace Symphono.Wfl.Profiles
                     .WithLink<Restaurant, FoodOrdersController>(c => c.CreateFoodOrderAsync(null))
                     .WithField(x => x
                         .WithName(nameof(FoodOrderDto.RestaurantId))
-                        .WithType("text")
+                        .WithType("hidden")
                         .WithTitle("Restaurant Id")
                         .WithValue(r => r.Id)
                     )
@@ -53,7 +53,7 @@ namespace Symphono.Wfl.Profiles
                     )
                     .WithField(x => x
                         .WithName(nameof(RestaurantDto.MenuLink))
-                        .WithType("text")
+                        .WithType("url")
                         .WithTitle("Menu Link")
                     )
                )
