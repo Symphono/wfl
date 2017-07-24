@@ -40,12 +40,10 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            Restaurant r = new Restaurant()
-            {
-                Name = restaurant.Name,
-                MenuLink = restaurant.MenuLink
-            };
-            return Ok(await DBManager.UpdateEntityAsync(id, r));
+            Restaurant restaurantEntity = await DBManager.GetEntityByIdAsync<Restaurant>(id);
+            restaurantEntity.Name = restaurant.Name;
+            restaurantEntity.MenuLink = restaurant.MenuLink;
+            return Ok(await DBManager.UpdateEntityAsync(id, restaurantEntity));
         }
 
         [Route("")]
