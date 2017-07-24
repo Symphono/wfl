@@ -14,17 +14,28 @@ namespace Symphono.Wfl.Profiles
                     .WithRepresentation("menu-selection")
                 )
                 .UsePropertiesTransform(properties => properties
-                    .WithProperty(s => s.Id)
+                    .WithProperty(s => s.Index)
                     .WithProperty(s => s.Description)
                     .WithProperty(s => s.OrdererName)
-                    .WithProperty(s => s.FoodOrderId)
+                    .WithProperty(s => s.FoodOrder)
                 )
+                /*.UseSubEntityTransform(subentities => subentities
+                    .WithEmbeddedEntity(
+                        s => s.FoodOrder, 
+                        subentityconfig => subentityconfig
+                            .WithRelation("food-order")
+                            .WithRepresentation("food-order")
+                            .WithConfiguration(embeddedConfiguration => embeddedConfiguration
+                                .UseProfile<FoodOrder, FoodOrderProfile>()
+                            )
+                    )
+                )*/
                 .UseLinkTransform(links => links
                     .WithLink(l => l
                         .WithRelation("self")
                         .WithRepresentation("menu-selection")
                         .WithLink<MenuSelection, MenuSelectionsController>(
-                            s => mc => mc.GetByIdAsync(s.Id)
+                            s => mc => mc.GetByIndexAsync(s.FoodOrder.Id, s.Index)
                         )
                     )
                  );

@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
+using Newtonsoft.Json;
 
 namespace Symphono.Wfl.Models
 {
@@ -9,6 +10,7 @@ namespace Symphono.Wfl.Models
         public string OrdererName { get; set; }
         public string Description { get; set; }
         [BsonIgnore]
+        [JsonIgnore]
         public FoodOrder FoodOrder { get; set; }
     }
 }
