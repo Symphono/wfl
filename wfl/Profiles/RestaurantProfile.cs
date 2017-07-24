@@ -26,6 +26,19 @@ namespace Symphono.Wfl.Profiles
                             r => rc => rc.GetByIdAsync(r.Id)
                         )
                     )
+                 )
+                 .UseActionTransform(actions => actions
+                    .WithName("create-food-order")
+                    .WithRepresentation("food-order")
+                    .WithMethod(ActionMethod.Create)
+                    .WithEncoding("application/x-www-form-urlencoded")
+                    .WithLink<Restaurant, FoodOrdersController>(c => c.CreateFoodOrderAsync(null))
+                    .WithField(x => x
+                        .WithName(nameof(FoodOrderDto.RestaurantId))
+                        .WithType("text")
+                        .WithTitle("Restaurant Id")
+                        .WithValue(r => r.Id)
+                    )
                )
                .UseActionTransform(actions => actions
                     .WithName("edit-restaurant")
