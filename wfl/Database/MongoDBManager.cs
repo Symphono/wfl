@@ -58,7 +58,15 @@ namespace Symphono.Wfl.Database
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
             IAsyncCursor<T> task = await collection.FindAsync(e => true, null);
-            return task.ToEnumerable();
+            IList<T> entities = task.ToList();
+            if(entities.Count > 0 && entities[0] is IContainerEntity)
+            {
+                foreach(T entity in entities)
+                {
+                    (entity as IContainerEntity).OnDeserialize();
+                }
+            }
+            return entities;
         }
 
         public async Task<T> GetEntityByIdAsync<T>(string id) where T: IEntity
@@ -66,7 +74,12 @@ namespace Symphono.Wfl.Database
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
             var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
             IAsyncCursor<T> task = await collection.FindAsync(filter, null);
-            return await task.FirstOrDefaultAsync();
+            T entity = await task.FirstOrDefaultAsync();
+            if (entity is IContainerEntity)
+            {
+                (entity as IContainerEntity).OnDeserialize();
+            }
+            return entity;
         }
         public async Task<T> DeleteEntityByIdAsync<T>(string id) where T: IEntity
         {

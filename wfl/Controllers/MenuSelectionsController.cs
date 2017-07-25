@@ -8,6 +8,7 @@ using Symphono.Wfl.Database;
 
 namespace Symphono.Wfl.Controllers
 {
+    [RoutePrefix("api/food-order/{foodOrderid}/menu-selection")]
     public class MenuSelectionsController : ApiController
     {
         private IDBManager dbManager { get; }
@@ -15,7 +16,7 @@ namespace Symphono.Wfl.Controllers
            this.dbManager = dbManager;
         }
 
-        [Route("api/food-order/{foodOrderId}/menu-selection")]
+        [Route("")]
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync([FromUri] string foodOrderId)
         {
@@ -23,32 +24,24 @@ namespace Symphono.Wfl.Controllers
             return Ok(order.MenuSelections);
         }
 
-        [Route("api/menu-selection")]
+        [Route("{index}")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetAsync()
+        public async Task<IHttpActionResult> GetByIndexAsync([FromUri] string foodOrderId, [FromUri] int index)
         {
-            return Ok(await dbManager.GetAllEntitiesAsync<MenuSelection>());
+            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
+            return Ok(order.MenuSelections[index]);
         }
 
-        [Route("api/menu-selection/{id}")]
-        [HttpGet]
-        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
-        {
-            return Ok(await dbManager.GetEntityByIdAsync<MenuSelection>(id));
-        }
-
-        [Route("api/menu-selection/{id}")]
+        [Route("{index}")]
         [HttpDelete]
-        public async Task<IHttpActionResult> DeleteByIdAsync([FromUri] string id)
+        public async Task<IHttpActionResult> DeleteByIdAsync([FromUri] string foodOrderId, [FromUri] int index)
         {
-            MenuSelection selection = await dbManager.GetEntityByIdAsync<MenuSelection>(id);
-            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(selection.FoodOrderId);
-            order.MenuSelections = order.MenuSelections.Where(x => x.Id != id);
-            await dbManager.UpdateEntityAsync(selection.FoodOrderId, order);
-            return Ok(await dbManager.DeleteEntityByIdAsync<MenuSelection>(id));
+            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
+            order.MenuSelections = order.MenuSelections.Where(x => x.Index != index).ToList();
+            return Ok(await dbManager.UpdateEntityAsync(foodOrderId, order));
         }
 
-        [Route("api/food-order/{foodOrderId}/menu-selection")]
+        [Route("")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateMenuSelectionAsync(MenuSelectionDto selection, [FromUri] string foodOrderId)
         {
@@ -56,21 +49,23 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            MenuSelection s = new MenuSelection()
+            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
+            MenuSelection selectionEntity = new MenuSelection()
             {
                 OrdererName = selection.OrdererName,
                 Description = selection.Description,
-                FoodOrderId = foodOrderId
             };
-            s = await dbManager.InsertEntityAsync(s);
 
-            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
             if (order.MenuSelections == null)
             {
-                order.MenuSelections = (new[] { s });
+                order.MenuSelections = (new[] { selectionEntity });
+                order.MenuSelections[0].Index = 0;
             }
             else
-                order.MenuSelections = order.MenuSelections.Concat(new[] { s });
+            {
+                order.MenuSelections.Add(selectionEntity);
+                order.MenuSelections[order.MenuSelections.Count() - 1].Index = order.MenuSelections.Count() - 1;
+            }
             return Ok(await dbManager.UpdateEntityAsync(foodOrderId, order));
         }
     }
