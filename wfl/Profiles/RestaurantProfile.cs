@@ -41,7 +41,7 @@ namespace Symphono.Wfl.Profiles
                     )
                )
                .UseActionTransform(actions => actions
-                    .WithName("edit-restaurant")
+                    .WithName("edit")
                     .WithRepresentation("restaurant")
                     .WithMethod(ActionMethod.Replace)
                     .WithEncoding("application/x-www-form-urlencoded")
