@@ -45,7 +45,7 @@ namespace Symphono.Wfl.Profiles
                     .WithRepresentation("restaurant")
                     .WithMethod(ActionMethod.Replace)
                     .WithEncoding("application/x-www-form-urlencoded")
-                    .WithLink<Restaurant, RestaurantsController>(r => c => c.UpdateAsync(null, r.Id))
+                    .WithLink<Restaurant, RestaurantsController>(r => c => c.UpdateAsync(r.Id, null))
                     .WithField(x => x
                         .WithName(nameof(RestaurantDto.Name))
                         .WithType("text")

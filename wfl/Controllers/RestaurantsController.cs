@@ -34,7 +34,7 @@ namespace Symphono.Wfl.Controllers
 
         [Route("{id}")]
         [HttpPut]
-        public async Task<IHttpActionResult> UpdateAsync([FromBody] RestaurantDto restaurant, [FromUri] string id)
+        public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
             if (string.IsNullOrEmpty(id) || await DBManager.GetEntityByIdAsync<Restaurant>(id) == null || string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
             {
