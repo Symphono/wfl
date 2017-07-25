@@ -17,19 +17,14 @@ namespace Symphono.Wfl.Profiles
                     .WithProperty(s => s.Index)
                     .WithProperty(s => s.Description)
                     .WithProperty(s => s.OrdererName)
-                    .WithProperty(s => s.FoodOrder)
                 )
-                /*.UseSubEntityTransform(subentities => subentities
-                    .WithEmbeddedEntity(
-                        s => s.FoodOrder, 
-                        subentityconfig => subentityconfig
-                            .WithRelation("food-order")
-                            .WithRepresentation("food-order")
-                            .WithConfiguration(embeddedConfiguration => embeddedConfiguration
-                                .UseProfile<FoodOrder, FoodOrderProfile>()
-                            )
+                .UseSubEntityTransform(subentities => subentities 
+                    .WithLinkedEntity(s => s.FoodOrder, config => config
+                        .WithRelation("food-order")
+                        .WithRepresentation("food-order")
+                        .WithLink<MenuSelection, FoodOrder, FoodOrdersController>(s => fc => fc.GetByIdAsync(s.FoodOrder.Id))
                     )
-                )*/
+                )
                 .UseLinkTransform(links => links
                     .WithLink(l => l
                         .WithRelation("self")
