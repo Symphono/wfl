@@ -35,9 +35,26 @@ namespace Symphono.Wfl.Profiles
                     .WithLink<Restaurant, FoodOrdersController>(c => c.CreateFoodOrderAsync(null))
                     .WithField(x => x
                         .WithName(nameof(FoodOrderDto.RestaurantId))
-                        .WithType("text")
+                        .WithType("hidden")
                         .WithTitle("Restaurant Id")
                         .WithValue(r => r.Id)
+                    )
+               )
+               .UseActionTransform(actions => actions
+                    .WithName("edit")
+                    .WithRepresentation("restaurant")
+                    .WithMethod(ActionMethod.Replace)
+                    .WithEncoding("application/x-www-form-urlencoded")
+                    .WithLink<Restaurant, RestaurantsController>(r => c => c.UpdateAsync(r.Id, null))
+                    .WithField(x => x
+                        .WithName(nameof(RestaurantDto.Name))
+                        .WithType("text")
+                        .WithTitle("Name")
+                    )
+                    .WithField(x => x
+                        .WithName(nameof(RestaurantDto.MenuLink))
+                        .WithType("url")
+                        .WithTitle("Menu Link")
                     )
                )
                .When((dto, request) => 
