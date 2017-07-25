@@ -104,8 +104,7 @@ namespace Symphono.Wfl.Database
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
             var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
             await collection.ReplaceOneAsync(filter, entity);
-            IAsyncCursor<T> task = await collection.FindAsync(filter);
-            return await task.FirstAsync();
+            return entity;
         }
 
         public DateTime GetCreationTime(string id)

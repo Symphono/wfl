@@ -55,7 +55,7 @@ namespace Symphono.Wfl.Controllers
                 OrdererName = selection.OrdererName,
                 Description = selection.Description,
             };
-
+            selectionEntity.FoodOrder = order;
             if (order.MenuSelections == null)
             {
                 order.MenuSelections = (new[] { selectionEntity });
