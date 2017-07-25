@@ -184,6 +184,7 @@
     </Compile>
     <Compile Include="Models\FoodOrder.cs" />
     <Compile Include="Models\FoodOrderDto.cs" />
+    <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\Restaurant.cs" />
     <Compile Include="Models\RestaurantCollection.cs" />
     <Compile Include="Models\RestaurantDto.cs" />

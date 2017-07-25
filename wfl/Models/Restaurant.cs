@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.IdGenerators;
 
 namespace Symphono.Wfl.Models
 {
-    public class Restaurant
+    public class Restaurant: IEntity
     {
         [BsonIgnoreIfNull]
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]

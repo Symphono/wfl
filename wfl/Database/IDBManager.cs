@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
-using Symphono.Wfl.Models;
 using System.Threading.Tasks;
+using Symphono.Wfl.Models;
+using System;
 
 namespace Symphono.Wfl.Database
 {
     public interface IDBManager
     {
-        Task<Restaurant> InsertRestaurantAsync(RestaurantDto r);
-        Task<IEnumerable<Restaurant>> GetAllRestaurantsAsync();
-        Task<Restaurant> GetRestaurantWithIdAsync(string id);
-        Task<Restaurant> UpdateRestaurantAsync(string id, RestaurantDto restaurant);
-        Task<IEnumerable<FoodOrder>> GetAllFoodOrdersAsync();
-        Task<FoodOrder> GetFoodOrderWithIdAsync(string id);
-        Task<FoodOrder> InsertFoodOrderAsync(FoodOrderDto order);
+        Task<T> InsertEntityAsync<T>(T entity) where T : IEntity;
+        Task<IEnumerable<T>> GetAllEntitiesAsync<T>() where T : IEntity;
+        Task<T> GetEntityByIdAsync<T>(string id) where T : IEntity;
+        Task<T> UpdateEntityAsync<T>(string id, T entity) where T: IEntity;
     }
 }
