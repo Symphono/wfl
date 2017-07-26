@@ -16,9 +16,10 @@ namespace Symphono.Wfl.Models
         {
             if (MenuSelections != null)
             {
-                foreach (MenuSelection selection in MenuSelections)
+                for(int i = 0; i < MenuSelections.Count; i++)
                 {
-                    selection.FoodOrder = this;
+                    MenuSelections[i].FoodOrder = this;
+                    MenuSelections[i].Index = i;
                 }
             }
         }

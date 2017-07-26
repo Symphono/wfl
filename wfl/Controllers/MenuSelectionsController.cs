@@ -38,7 +38,8 @@ namespace Symphono.Wfl.Controllers
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
             order.MenuSelections = order.MenuSelections.Where(x => x.Index != index).ToList();
-            return Ok(await dbManager.UpdateEntityAsync(foodOrderId, order));
+            await dbManager.UpdateEntityAsync(foodOrderId, order);
+            return Ok(await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId));
         }
 
         [Route("")]
