@@ -54,6 +54,11 @@ namespace Symphono.Wfl.Profiles
                             .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.DiscardAsync(o.Id))
                         )
                         .UseActionTransform(actions => actions
+                            .WithName("complete")
+                            .WithMethod(ActionMethod.Create)
+                            .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.CompleteAsync(o.Id))
+                        )
+                        .UseActionTransform(actions => actions
                             .WithName("create-menu-selection")
                             .WithRepresentation("menu-selection")
                             .WithMethod(ActionMethod.Create)

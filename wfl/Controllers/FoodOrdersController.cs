@@ -68,5 +68,19 @@ namespace Symphono.Wfl.Controllers
             order.setStatus(EntityStatus.Status.Active);
             return Ok(await dbManager.UpdateEntityAsync(id, order));
         }
+
+        [Route("{id}/complete")]
+        [HttpPost]
+        public async Task<IHttpActionResult> CompleteAsync([FromUri] string id)
+        {
+            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
+            if (order.Status != EntityStatus.Status.Active)
+            {
+                return BadRequest();
+            }
+            order.setStatus(EntityStatus.Status.Completed);
+            return Ok(await dbManager.UpdateEntityAsync(id, order));
+        }
     }
+
 }
