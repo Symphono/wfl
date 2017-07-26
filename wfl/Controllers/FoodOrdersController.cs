@@ -42,5 +42,31 @@ namespace Symphono.Wfl.Controllers
         {
             return Ok(await dbManager.GetEntityByIdAsync<FoodOrder>(id));
         }
+
+        [Route("{id}/discard")]
+        [HttpPost]
+        public async Task<IHttpActionResult> DiscardAsync([FromUri] string id)
+        {
+            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
+            if (order.Status != EntityStatus.Status.Active)
+            {
+                return BadRequest();
+            }
+            order.setStatus(EntityStatus.Status.Discarded);
+            return Ok(await dbManager.UpdateEntityAsync(id, order));
+        }
+
+        [Route("{id}/reactivate")]
+        [HttpPost]
+        public async Task<IHttpActionResult> ReactivateAsync([FromUri] string id)
+        {
+            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
+            if (order.Status != EntityStatus.Status.Discarded)
+            {
+                return BadRequest();
+            }
+            order.setStatus(EntityStatus.Status.Active);
+            return Ok(await dbManager.UpdateEntityAsync(id, order));
+        }
     }
 }

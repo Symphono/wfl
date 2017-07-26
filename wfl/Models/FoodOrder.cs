@@ -12,6 +12,7 @@ namespace Symphono.Wfl.Models
         public string Id { get; set; }
         public string RestaurantId { get; set; }
         public IList<MenuSelection> MenuSelections { get; set; }
+        public EntityStatus.Status Status { get; private set; } = EntityStatus.Status.Active;
         public void OnDeserialize()
         {
             if (MenuSelections != null)
@@ -21,6 +22,10 @@ namespace Symphono.Wfl.Models
                     selection.FoodOrder = this;
                 }
             }
+        }
+        public void setStatus(EntityStatus.Status status)
+        {
+            Status = status;
         }
     }
 }

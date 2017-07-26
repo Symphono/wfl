@@ -17,6 +17,7 @@ namespace Symphono.Wfl.Profiles
                 .UsePropertiesTransform(properties => properties
                     .WithProperty(o => o.Id)
                     .WithProperty(o => o.RestaurantId)
+                    .WithProperty(o => o.Status)
                 )
                 .UseEnumerableEmbeddedSubEntityTransform(
                     o => o.MenuSelections,
@@ -35,23 +36,6 @@ namespace Symphono.Wfl.Profiles
                         )
                     )
                  )
-                 .UseActionTransform(actions => actions
-                    .WithName("create-menu-selection")
-                    .WithRepresentation("menu-selection")
-                    .WithMethod(ActionMethod.Create)
-                    .WithEncoding("application/x-www-form-urlencoded")
-                    .WithLink<FoodOrder, MenuSelectionsController>(o => mc => mc.CreateMenuSelectionAsync(null, o.Id))
-                    .WithField(x => x
-                        .WithName(nameof(MenuSelectionDto.OrdererName))
-                        .WithType("text")
-                        .WithTitle("Orderer Name")
-                    )
-                    .WithField(x => x
-                        .WithName(nameof(MenuSelectionDto.Description))
-                        .WithType("text")
-                        .WithTitle("Description")
-                    )
-                )
                 .UseLinkTransform(links => links
                     .WithLink(l => l
                         .WithRelation("restaurant")
@@ -60,6 +44,41 @@ namespace Symphono.Wfl.Profiles
                             o => rc => rc.GetByIdAsync(o.RestaurantId)
                         )
                     )
+                )
+                .When(
+                    (o, request) => o.Status == EntityStatus.Status.Active,
+                    config => config
+                        .UseActionTransform(actions => actions
+                            .WithName("discard")
+                            .WithMethod(ActionMethod.Create)
+                            .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.DiscardAsync(o.Id))
+                        )
+                        .UseActionTransform(actions => actions
+                            .WithName("create-menu-selection")
+                            .WithRepresentation("menu-selection")
+                            .WithMethod(ActionMethod.Create)
+                            .WithEncoding("application/x-www-form-urlencoded")
+                            .WithLink<FoodOrder, MenuSelectionsController>(o => mc => mc.CreateMenuSelectionAsync(null, o.Id))
+                            .WithField(x => x
+                                .WithName(nameof(MenuSelectionDto.OrdererName))
+                                .WithType("text")
+                                .WithTitle("Orderer Name")
+                            )
+                            .WithField(x => x
+                                .WithName(nameof(MenuSelectionDto.Description))
+                                .WithType("text")
+                                .WithTitle("Description")
+                            )
+                        )
+                )
+                .When(
+                    (o, request) => o.Status == EntityStatus.Status.Discarded,
+                    config => config
+                        .UseActionTransform(actions => actions
+                            .WithName("reactivate")
+                            .WithMethod(ActionMethod.Create)
+                            .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.ReactivateAsync(o.Id))
+                        )
                 );
         }
     }
