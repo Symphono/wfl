@@ -39,7 +39,7 @@ namespace Symphono.Wfl.Profiles
                     .WithName("delete-menu-selection")
                     .WithMethod(ActionMethod.Delete)
                     .WithEncoding("application/x-www-form-urlencoded")
-                    .WithLink<MenuSelection, MenuSelectionsController>(s => mc => mc.DeleteByIdAsync(s.FoodOrder.Id, s.Index))
+                    .WithLink<MenuSelection, MenuSelectionsController>(s => mc => mc.DeleteByIdAsync(s.FoodOrder.Id, s.Id))
                 );
         }
     }

@@ -32,12 +32,12 @@ namespace Symphono.Wfl.Controllers
             return Ok(order.MenuSelections.FirstOrDefault(x => x.Id == selectionId));
         }
 
-        [Route("{index}")]
+        [Route("{selectionId}")]
         [HttpDelete]
-        public async Task<IHttpActionResult> DeleteByIdAsync([FromUri] string foodOrderId, [FromUri] int index)
+        public async Task<IHttpActionResult> DeleteByIdAsync([FromUri] string foodOrderId, [FromUri] string selectionId)
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
-            order.MenuSelections = order.MenuSelections.Where(x => x.Index != index).ToList();
+            order.MenuSelections = order.MenuSelections.Where(x => x.Id != selectionId).ToList();
             await dbManager.UpdateEntityAsync(foodOrderId, order);
             return Ok(await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId));
         }
