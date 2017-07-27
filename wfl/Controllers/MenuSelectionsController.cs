@@ -24,12 +24,12 @@ namespace Symphono.Wfl.Controllers
             return Ok(order.MenuSelections);
         }
 
-        [Route("{index}")]
+        [Route("{selectionId}")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetByIndexAsync([FromUri] string foodOrderId, [FromUri] int index)
+        public async Task<IHttpActionResult> GetByIdAsync([FromUri] string foodOrderId, [FromUri] string selectionId)
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
-            return Ok(order.MenuSelections[index]);
+            return Ok(order.MenuSelections.FirstOrDefault(x => x.Id == selectionId));
         }
 
         [Route("")]
@@ -47,16 +47,7 @@ namespace Symphono.Wfl.Controllers
                 Description = selection.Description,
             };
             selectionEntity.FoodOrder = order;
-            if (order.MenuSelections == null)
-            {
-                order.MenuSelections = (new[] { selectionEntity });
-                order.MenuSelections[0].Index = 0;
-            }
-            else
-            {
-                order.MenuSelections.Add(selectionEntity);
-                order.MenuSelections[order.MenuSelections.Count() - 1].Index = order.MenuSelections.Count() - 1;
-            }
+            order.addMenuSelection(selectionEntity);
             return Ok(await dbManager.UpdateEntityAsync(foodOrderId, order));
         }
     }
