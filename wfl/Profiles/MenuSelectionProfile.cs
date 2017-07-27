@@ -15,7 +15,7 @@ namespace Symphono.Wfl.Profiles
                     .WithRepresentation("menu-selection")
                 )
                 .UsePropertiesTransform(properties => properties
-                    .WithProperty(s => s.Index)
+                    .WithProperty(s => s.Id)
                     .WithProperty(s => s.Description)
                     .WithProperty(s => s.OrdererName)
                 )
@@ -31,7 +31,7 @@ namespace Symphono.Wfl.Profiles
                         .WithRelation("self")
                         .WithRepresentation("menu-selection")
                         .WithLink<MenuSelection, MenuSelectionsController>(
-                            s => mc => mc.GetByIndexAsync(s.FoodOrder.Id, s.Index)
+                            s => mc => mc.GetByIdAsync(s.FoodOrder.Id, s.Id)
                         )
                     )
                 )
