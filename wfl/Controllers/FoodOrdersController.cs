@@ -1,5 +1,7 @@
 ﻿using System.Web.Http;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using Symphono.Wfl.Models;
 using Symphono.Wfl.Database;
 
@@ -31,9 +33,15 @@ namespace Symphono.Wfl.Controllers
 
         [Route("")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetAsync()
+        public async Task<IHttpActionResult> GetAsync([FromUri] StatusSearchCriteria criteria)
         {
-            return Ok(await dbManager.GetAllEntitiesAsync<FoodOrder>());
+            criteria = criteria ?? new StatusSearchCriteria();
+            IEnumerable<FoodOrder> orders = await dbManager.GetAllEntitiesAsync<FoodOrder>();
+            if (criteria != null)
+            {
+                orders = orders.Where(o => o.Status == criteria.Status);
+            }
+            return Ok(orders);
         }
 
         [Route("{id}")]
