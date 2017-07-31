@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using MongoDB.Bson;
 
 namespace Symphono.Wfl.Models
 {
@@ -16,10 +16,22 @@ namespace Symphono.Wfl.Models
         {
             if (MenuSelections != null)
             {
-                foreach (MenuSelection selection in MenuSelections)
+                for(int i = 0; i < MenuSelections.Count; i++)
                 {
-                    selection.FoodOrder = this;
+                    MenuSelections[i].FoodOrder = this;
                 }
+            }
+        }
+        public void addMenuSelection(MenuSelection selection)
+        {
+            selection.Id = ObjectId.GenerateNewId().ToString();
+            if (MenuSelections == null)
+            {
+                MenuSelections = (new[] { selection });
+            }
+            else
+            {
+                MenuSelections.Add(selection);
             }
         }
     }
