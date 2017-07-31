@@ -48,7 +48,7 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> DiscardAsync([FromUri] string id)
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
-            if (order.Status != EntityStatus.Status.Active)
+            if (order?.Status != EntityStatus.Status.Active)
             {
                 return BadRequest();
             }
@@ -61,7 +61,7 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> ReactivateAsync([FromUri] string id)
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
-            if (order.Status != EntityStatus.Status.Discarded)
+            if (order?.Status != EntityStatus.Status.Discarded)
             {
                 return BadRequest();
             }
