@@ -35,13 +35,21 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync([FromUri] StatusSearchCriteria criteria)
         {
-            criteria = criteria ?? new StatusSearchCriteria();
             IEnumerable<FoodOrder> orders = await dbManager.GetAllEntitiesAsync<FoodOrder>();
-            if (criteria != null)
+            if (criteria?.Status == EntityStatus.Status.Active || criteria?.Status == EntityStatus.Status.Completed || criteria?.Status == EntityStatus.Status.Discarded)
             {
                 orders = orders.Where(o => o.Status == criteria.Status);
             }
-            return Ok(orders);
+            else if (criteria != null)
+            {
+                return BadRequest();
+            }
+            FoodOrderCollection foodOrderCollection = new FoodOrderCollection()
+            {
+                FoodOrders = orders,
+                Criteria = criteria
+            };
+            return Ok(foodOrderCollection);
         }
 
         [Route("{id}")]

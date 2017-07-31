@@ -8,5 +8,6 @@ namespace Symphono.Wfl.Models
     public class FoodOrderCollection
     {
         public IEnumerable<FoodOrder> FoodOrders { get; set; }
+        public StatusSearchCriteria Criteria { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace Symphono.Wfl.Models
     {
         public enum Status
         {
-            Active,
+            Active = 1,
             Discarded,
             Completed
         }

@@ -38,7 +38,7 @@ namespace Symphono.Wfl.Profiles
                         .WithRelation("food-orders")
                         .WithRepresentation("food-order")
                         .WithLink<Root, FoodOrdersController>(
-                            root => fc => fc.GetAsync()
+                            root => fc => fc.GetAsync(null)
                         )
                     )
                );
