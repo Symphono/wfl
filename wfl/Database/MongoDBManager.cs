@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Web.Configuration;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
@@ -15,9 +14,9 @@ namespace Symphono.Wfl.Database
         public static IMongoDatabase db;
         private string collectionName { get; }
         
-        public MongoDBManager(string inputCollectionName)
+        public MongoDBManager(string inputCollectionName, string inputConnectionString)
         {
-            connectionString = WebConfigurationManager.ConnectionStrings["databaseConnectionString"].ConnectionString;
+            connectionString = inputConnectionString;
             client = new MongoClient(connectionString);
             db = client.GetDatabase("WFL");
             collectionName = inputCollectionName;
