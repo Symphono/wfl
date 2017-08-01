@@ -47,7 +47,7 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> CreateMenuSelectionAsync(MenuSelectionDto selection, [FromUri] string foodOrderId)
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
-            if (order?.Status != EntityStatus.Status.Active || string.IsNullOrEmpty(selection?.Description) || string.IsNullOrEmpty(selection?.OrdererName))
+            if (order?.Status != FoodOrder.StatusOptions.Active || string.IsNullOrEmpty(selection?.Description) || string.IsNullOrEmpty(selection?.OrdererName))
             {
                 return BadRequest();
             }

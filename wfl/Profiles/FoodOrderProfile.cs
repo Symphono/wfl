@@ -46,16 +46,16 @@ namespace Symphono.Wfl.Profiles
                     )
                 )
                 .When(
-                    (o, request) => o.Status == EntityStatus.Status.Active,
+                    (o, request) => o.Status == FoodOrder.StatusOptions.Active,
                     config => config
                         .UseActionTransform(actions => actions
                             .WithName("discard")
                             .WithMethod(ActionMethod.Create)
                             .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.SetStatusAsync(o.Id, null))
                             .WithField(x => x
-                                .WithName(nameof(StatusDto.Status))
+                                .WithName(nameof(FoodOrderStatusDto.Status))
                                 .WithType("hidden")
-                                .WithValue(EntityStatus.Status.Discarded)
+                                .WithValue(FoodOrder.StatusOptions.Discarded)
                             )
                         )
                         .UseActionTransform(actions => actions
@@ -77,16 +77,16 @@ namespace Symphono.Wfl.Profiles
                         )
                 )
                 .When(
-                    (o, request) => o.Status == EntityStatus.Status.Discarded,
+                    (o, request) => o.Status == FoodOrder.StatusOptions.Discarded,
                     config => config
                         .UseActionTransform(actions => actions
                             .WithName("reactivate")
                             .WithMethod(ActionMethod.Create)
                             .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.SetStatusAsync(o.Id, null))
                             .WithField(x => x
-                                .WithName(nameof(StatusDto.Status))
+                                .WithName(nameof(FoodOrderStatusDto.Status))
                                 .WithType("hidden")
-                                .WithValue(EntityStatus.Status.Active)
+                                .WithValue(FoodOrder.StatusOptions.Active)
                             )
                         )
                 );

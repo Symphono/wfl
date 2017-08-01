@@ -45,7 +45,7 @@ namespace Symphono.Wfl.Controllers
 
         [Route("{id}")]
         [HttpPost]
-        public async Task<IHttpActionResult> SetStatusAsync([FromUri] string id, [FromBody] StatusDto dto)
+        public async Task<IHttpActionResult> SetStatusAsync([FromUri] string id, [FromBody] FoodOrderStatusDto dto)
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
             if (order?.Status == dto?.Status)
