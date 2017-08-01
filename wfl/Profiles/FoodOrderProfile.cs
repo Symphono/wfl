@@ -51,7 +51,12 @@ namespace Symphono.Wfl.Profiles
                         .UseActionTransform(actions => actions
                             .WithName("discard")
                             .WithMethod(ActionMethod.Create)
-                            .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.DiscardAsync(o.Id))
+                            .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.SetStatusAsync(o.Id, null))
+                            .WithField(x => x
+                                .WithName(nameof(StatusDto.Status))
+                                .WithType("hidden")
+                                .WithValue(EntityStatus.Status.Discarded)
+                            )
                         )
                         .UseActionTransform(actions => actions
                             .WithName("create-menu-selection")
@@ -77,7 +82,12 @@ namespace Symphono.Wfl.Profiles
                         .UseActionTransform(actions => actions
                             .WithName("reactivate")
                             .WithMethod(ActionMethod.Create)
-                            .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.ReactivateAsync(o.Id))
+                            .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.SetStatusAsync(o.Id, null))
+                            .WithField(x => x
+                                .WithName(nameof(StatusDto.Status))
+                                .WithType("hidden")
+                                .WithValue(EntityStatus.Status.Active)
+                            )
                         )
                 );
         }

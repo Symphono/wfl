@@ -5,12 +5,8 @@ using System.Web;
 
 namespace Symphono.Wfl.Models
 {
-    public class EntityStatus
+    public class StatusDto
     {
-        public enum Status
-        {
-            Active = 1,
-            Discarded
-        }
+        public EntityStatus.Status Status { get; set; }
     }
 }
