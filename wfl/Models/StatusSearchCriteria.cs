@@ -7,6 +7,6 @@ namespace Symphono.Wfl.Models
 {
     public class StatusSearchCriteria
     {
-        public EntityStatus.Status Status { get; set;}
+        public FoodOrder.StatusOptions Status { get; set;}
     }
 }
