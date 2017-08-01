@@ -43,44 +43,17 @@ namespace Symphono.Wfl.Controllers
             return Ok(await dbManager.GetEntityByIdAsync<FoodOrder>(id));
         }
 
-        [Route("{id}/discard")]
+        [Route("{id}")]
         [HttpPost]
-        public async Task<IHttpActionResult> DiscardAsync([FromUri] string id)
+        public async Task<IHttpActionResult> SetStatusAsync([FromUri] string id, [FromBody] FoodOrderStatusDto dto)
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
-            if (order?.Status != EntityStatus.Status.Active)
+            if (order?.Status == dto?.Status || order?.Status == FoodOrder.StatusOptions.Completed || (order?.Status == FoodOrder.StatusOptions.Discarded && dto?.Status == FoodOrder.StatusOptions.Completed))
             {
                 return BadRequest();
             }
-            order.setStatus(EntityStatus.Status.Discarded);
-            return Ok(await dbManager.UpdateEntityAsync(id, order));
-        }
-
-        [Route("{id}/reactivate")]
-        [HttpPost]
-        public async Task<IHttpActionResult> ReactivateAsync([FromUri] string id)
-        {
-            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
-            if (order?.Status != EntityStatus.Status.Discarded)
-            {
-                return BadRequest();
-            }
-            order.setStatus(EntityStatus.Status.Active);
-            return Ok(await dbManager.UpdateEntityAsync(id, order));
-        }
-
-        [Route("{id}/complete")]
-        [HttpPost]
-        public async Task<IHttpActionResult> CompleteAsync([FromUri] string id)
-        {
-            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
-            if (order?.Status != EntityStatus.Status.Active)
-            {
-                return BadRequest();
-            }
-            order.setStatus(EntityStatus.Status.Completed);
+            order.setStatus(dto.Status);
             return Ok(await dbManager.UpdateEntityAsync(id, order));
         }
     }
-
 }
