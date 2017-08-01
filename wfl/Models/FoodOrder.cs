@@ -7,12 +7,18 @@ namespace Symphono.Wfl.Models
 {
     public class FoodOrder: IContainerEntity
     {
+        public enum StatusOptions
+        {
+            Active = 1,
+            Discarded,
+            Completed
+        }
         [BsonIgnoreIfNull]
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         public string Id { get; set; }
         public string RestaurantId { get; set; }
         public IList<MenuSelection> MenuSelections { get; set; }
-        public EntityStatus.Status Status { get; private set; } = EntityStatus.Status.Active;
+        public StatusOptions Status { get; private set; } = StatusOptions.Active;
         public void OnDeserialize()
         {
             if (MenuSelections != null)
@@ -23,7 +29,7 @@ namespace Symphono.Wfl.Models
                 }
             }
         }
-        public void setStatus(EntityStatus.Status status)
+        public void setStatus(StatusOptions status)
         {
             Status = status;
         }
