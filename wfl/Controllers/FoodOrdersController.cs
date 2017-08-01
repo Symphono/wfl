@@ -36,7 +36,7 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> GetAsync([FromUri] StatusSearchCriteria criteria)
         {
             IEnumerable<FoodOrder> orders = await dbManager.GetAllEntitiesAsync<FoodOrder>();
-            if (criteria?.Status == EntityStatus.Status.Active || criteria?.Status == EntityStatus.Status.Completed || criteria?.Status == EntityStatus.Status.Discarded)
+            if (criteria?.Status == FoodOrder.StatusOptions.Active || criteria?.Status == FoodOrder.StatusOptions.Completed || criteria?.Status == FoodOrder.StatusOptions.Discarded)
             {
                 orders = orders.Where(o => o.Status == criteria.Status);
             }
