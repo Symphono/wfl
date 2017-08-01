@@ -7,6 +7,6 @@ namespace Symphono.Wfl.Models
 {
     public class FoodOrderStatusDto
     {
-        public FoodOrder.StatusOptions Status { get; set; }
+        public string Status { get; set; }
     }
 }

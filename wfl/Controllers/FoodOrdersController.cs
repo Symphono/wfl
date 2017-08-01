@@ -1,4 +1,5 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 using System.Threading.Tasks;
 using Symphono.Wfl.Models;
 using Symphono.Wfl.Database;
@@ -48,11 +49,12 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> SetStatusAsync([FromUri] string id, [FromBody] FoodOrderStatusDto dto)
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
-            if (order?.Status == dto?.Status)
+            FoodOrder.StatusOptions status;
+            if (!Enum.TryParse(dto?.Status, false, out status) || order?.Status == status)
             {
                 return BadRequest();
             }
-            order.setStatus(dto.Status);
+            order.setStatus(status);
             return Ok(await dbManager.UpdateEntityAsync(id, order));
         }
     }
