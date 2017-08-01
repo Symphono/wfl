@@ -16,14 +16,6 @@ namespace Symphono.Wfl.Controllers
            this.dbManager = dbManager;
         }
 
-        [Route("")]
-        [HttpGet]
-        public async Task<IHttpActionResult> GetAsync([FromUri] string foodOrderId)
-        {
-            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
-            return Ok(order.MenuSelections);
-        }
-
         [Route("{selectionId}")]
         [HttpGet]
         public async Task<IHttpActionResult> GetByIdAsync([FromUri] string foodOrderId, [FromUri] string selectionId)
