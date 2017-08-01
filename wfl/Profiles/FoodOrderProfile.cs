@@ -55,7 +55,7 @@ namespace Symphono.Wfl.Profiles
                             .WithField(x => x
                                 .WithName(nameof(FoodOrderStatusDto.Status))
                                 .WithType("hidden")
-                                .WithValue(FoodOrder.StatusOptions.Discarded)
+                                .WithValue("Discarded")
                             )
                         )
                         .UseActionTransform(actions => actions
@@ -96,7 +96,7 @@ namespace Symphono.Wfl.Profiles
                             .WithField(x => x
                                 .WithName(nameof(FoodOrderStatusDto.Status))
                                 .WithType("hidden")
-                                .WithValue(FoodOrder.StatusOptions.Active)
+                                .WithValue("Active")
                             )
                         )
                 );
