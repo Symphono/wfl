@@ -60,6 +60,22 @@ namespace Symphono.Wfl.Controllers
             return Ok(await dbManager.GetEntityByIdAsync<FoodOrder>(id));
         }
 
+        [Route("status-options")]
+        [HttpGet]
+        public IHttpActionResult GetStatusOptions()
+        {
+            IList<string> enumValues = new List<string>();
+            foreach(var value in Enum.GetValues(typeof(FoodOrder.StatusOptions)))
+            {
+                enumValues.Add(value.ToString());
+            }
+            StatusOptionsRepresentation options = new StatusOptionsRepresentation()
+            {
+                values = enumValues
+            };
+            return Ok(options);
+        }
+
         [Route("{id}")]
         [HttpPost]
         public async Task<IHttpActionResult> SetStatusAsync([FromUri] string id, [FromBody] FoodOrderStatusDto dto)

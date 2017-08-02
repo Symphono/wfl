@@ -194,6 +194,7 @@
     <Compile Include="Models\RestaurantCollection.cs" />
     <Compile Include="Models\RestaurantDto.cs" />
     <Compile Include="Models\Root.cs" />
+    <Compile Include="Profiles\StatusOptionsRepresentationProfile.cs" />
     <Compile Include="Models\StatusSearchCriteria.cs" />
     <Compile Include="Profiles\FoodOrderCollectionProfile.cs" />
     <Compile Include="Models\FoodOrderStatusDto.cs" />
