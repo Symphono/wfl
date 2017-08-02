@@ -13,7 +13,7 @@ namespace Symphono.Wfl.Database
         private static string connectionString;
         public static MongoClient client;
         public static IMongoDatabase db;
-        
+
         public MongoDBManager()
         {
             connectionString = WebConfigurationManager.ConnectionStrings["databaseConnectionString"].ConnectionString;
@@ -67,6 +67,12 @@ namespace Symphono.Wfl.Database
                 }
             }
             return entities;
+        }
+
+        public async Task<IEnumerable<T>> GetFilteredEntities<T>(ICriteria<T> criteria) where T: IEntity
+        {
+            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            return await criteria.ApplyCriteria(collection);
         }
 
         public async Task<T> GetEntityByIdAsync<T>(string id) where T: IEntity
