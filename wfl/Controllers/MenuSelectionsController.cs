@@ -29,7 +29,12 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> DeleteByIdAsync([FromUri] string foodOrderId, [FromUri] string selectionId)
         {
             FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId);
-            order.MenuSelections = order.MenuSelections.Where(x => x.Id != selectionId).ToList();
+            MenuSelection selectionToDelete = order.MenuSelections.FirstOrDefault(x => x.Id == selectionId);
+            if (selectionToDelete == null)
+            {
+                return BadRequest();
+            }
+            order.MenuSelections.Remove(selectionToDelete);
             await dbManager.UpdateEntityAsync(foodOrderId, order);
             return Ok(await dbManager.GetEntityByIdAsync<FoodOrder>(foodOrderId));
         }
