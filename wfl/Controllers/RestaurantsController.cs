@@ -65,5 +65,12 @@ namespace Symphono.Wfl.Controllers
             return Ok(await dbManager.GetEntityByIdAsync<Restaurant>(id));
         }
 
+        [Route("{id}")]
+        [HttpDelete]
+        public async Task<IHttpActionResult> DeleteAsync([FromUri] string id)
+        {
+            return Ok(await dbManager.DeleteEntityByIdAsync<Restaurant>(id));
+        }
+
     }
 }

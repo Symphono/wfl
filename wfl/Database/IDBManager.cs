@@ -11,7 +11,8 @@ namespace Symphono.Wfl.Database
         Task<IEnumerable<T>> GetAllEntitiesAsync<T>() where T : IEntity;
         Task<T> GetEntityByIdAsync<T>(string id) where T : IEntity;
         Task<IEnumerable<T>> GetEntitiesByDateAsync<T>(DateTime date) where T : IEntity;
-        Task<T> UpdateEntityAsync<T>(string id, T entity) where T: IEntity;
+        Task<T> UpdateEntityAsync<T>(string id, T entity) where T : IEntity;
+        Task<T> DeleteEntityByIdAsync<T>(string id) where T : IEntity;
         DateTime GetCreationTime(string id);
     }
 }
