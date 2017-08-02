@@ -57,6 +57,11 @@ namespace Symphono.Wfl.Profiles
                         .WithTitle("Menu Link")
                     )
                )
+               .UseActionTransform(actions => actions
+                    .WithName("delete")
+                    .WithMethod(ActionMethod.Delete)
+                    .WithLink<Restaurant, RestaurantsController>(r => c => c.DeleteAsync(r.Id))
+               )
                .When((dto, request) => 
                     dto.MenuLink != null, 
                     whenConfig => whenConfig
