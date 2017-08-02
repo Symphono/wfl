@@ -77,6 +77,13 @@ namespace Symphono.Wfl.Database
             return entity;
         }
 
+        public async Task<T> DeleteEntityByIdAsync(string id)
+        {
+            IMongoCollection<T> collection = db.GetCollection<T>(collectionName);
+            var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
+            return await collection.FindOneAndDeleteAsync(filter);
+        }
+
         public DateTime GetCreationTime(string id)
         {
             return new ObjectId(id).CreationTime;

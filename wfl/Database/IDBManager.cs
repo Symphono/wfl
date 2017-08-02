@@ -12,6 +12,7 @@ namespace Symphono.Wfl.Database
         Task<T> GetEntityByIdAsync(string id);
         Task<IEnumerable<T>> GetEntitiesByDateAsync(DateTime date);
         Task<T> UpdateEntityAsync(string id, T entity);
+        Task<T> DeleteEntityByIdAsync(string id);
         DateTime GetCreationTime(string id);
     }
 }
