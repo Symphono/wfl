@@ -2,6 +2,7 @@
 using System.Web.Configuration;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using Symphono.Wfl.Models;
 using System;
 
@@ -57,23 +58,52 @@ namespace Symphono.Wfl.Database
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
             IAsyncCursor<T> task = await collection.FindAsync(e => true, null);
-            return task.ToEnumerable();
+            IList<T> entities = task.ToList();
+            if(entities.Count > 0 && entities[0] is IContainerEntity)
+            {
+                foreach(T entity in entities)
+                {
+                    (entity as IContainerEntity).OnDeserialize();
+                }
+            }
+            return entities;
         }
 
         public async Task<T> GetEntityByIdAsync<T>(string id) where T: IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
-            IAsyncCursor<T> task = await collection.FindAsync(e => e.Id == id, null);
-            return await task.FirstOrDefaultAsync();
+            var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
+            IAsyncCursor<T> task = await collection.FindAsync(filter, null);
+            T entity = await task.FirstOrDefaultAsync();
+            if (entity is IContainerEntity)
+            {
+                (entity as IContainerEntity).OnDeserialize();
+            }
+            return entity;
+        }
+        public async Task<IEnumerable<T>> GetEntitiesByDateAsync<T>(DateTime date) where T : IEntity
+        {
+            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            var lowerBound = Builders<T>.Filter.Gt(nameof(IEntity.Id), new ObjectId(date.Date, 0, 0, 0));
+            var upperBound = Builders<T>.Filter.Lt(nameof(IEntity.Id), new ObjectId(date.Date.AddDays(1), 0, 0, 0));
+            var bounds = new FilterDefinition<T>[] { lowerBound, upperBound };
+            var filter = Builders<T>.Filter.And(bounds);
+            
+            IAsyncCursor<T> task = await collection.FindAsync(lowerBound, null);
+            return task.ToEnumerable();
         }
 
         public async Task<T> UpdateEntityAsync<T>(string id, T entity) where T : IEntity
         {
             IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
-            var filter = Builders<T>.Filter.Eq("Id", id);
+            var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
             await collection.ReplaceOneAsync(filter, entity);
-            IAsyncCursor<T> task = await collection.FindAsync(filter);
-            return await task.FirstAsync();
+            return entity;
+        }
+
+        public DateTime GetCreationTime(string id)
+        {
+            return new ObjectId(id).CreationTime;
         }
     }
 }
