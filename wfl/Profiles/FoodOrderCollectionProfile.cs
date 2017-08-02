@@ -28,6 +28,10 @@ namespace Symphono.Wfl.Profiles
                     "self",
                     c => fc => fc.GetAsync(c.Criteria)
                 )
+                .WithLink<FoodOrderCollection, FoodOrdersController>(
+                    "status-options", 
+                    o => fc => fc.GetStatusOptions()
+                )
                 .UseActionTransform(actions => actions
                     .WithName("filter-food-orders")
                     .WithRepresentation("collection")
