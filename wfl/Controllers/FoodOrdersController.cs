@@ -11,16 +11,18 @@ namespace Symphono.Wfl.Controllers
     [RoutePrefix("api/food-order")]
     public class FoodOrdersController : ApiController
     {
-        private IDBManager dbManager { get; }
-        public FoodOrdersController(IDBManager dbManager)
+        private IDBManager<FoodOrder> foodOrderDBManager { get; }
+        private IDBManager<Restaurant> restaurantDBManager { get; }
+        public FoodOrdersController(IDBManager<FoodOrder> foodOrderDBManager, IDBManager<Restaurant> restaurantDBManager)
         {
-            this.dbManager = dbManager;
+            this.foodOrderDBManager = foodOrderDBManager;
+            this.restaurantDBManager = restaurantDBManager;
         }
         [Route("")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrderAsync([FromBody] FoodOrderDto order)
         {
-            if (string.IsNullOrEmpty(order?.RestaurantId) || await dbManager.GetEntityByIdAsync<Restaurant>(order.RestaurantId) == null)
+            if (string.IsNullOrEmpty(order?.RestaurantId) || await restaurantDBManager.GetEntityByIdAsync(order.RestaurantId) == null)
             {
                 return BadRequest();
             }
@@ -28,7 +30,7 @@ namespace Symphono.Wfl.Controllers
             {
                 RestaurantId = order.RestaurantId
             };
-            o = await dbManager.InsertEntityAsync(o);
+            o = await foodOrderDBManager.InsertEntityAsync(o);
             return Created(o.Id.ToString(), o);
         }
 
@@ -39,7 +41,7 @@ namespace Symphono.Wfl.Controllers
             IEnumerable<FoodOrder> orders;
             if (criteria?.Status == FoodOrder.StatusOptions.Active || criteria?.Status == FoodOrder.StatusOptions.Completed || criteria?.Status == FoodOrder.StatusOptions.Discarded)
             {
-                orders = await dbManager.GetFilteredEntities(criteria);
+                orders = await  foodOrderDBManager.GetFilteredEntities(criteria);
             }
             else if (criteria != null)
             {
@@ -47,7 +49,7 @@ namespace Symphono.Wfl.Controllers
             }
             else
             {
-                orders = await dbManager.GetAllEntitiesAsync<FoodOrder>();
+                orders = await foodOrderDBManager.GetAllEntitiesAsync();
             }
             FoodOrderCollection foodOrderCollection = new FoodOrderCollection()
             {
@@ -61,7 +63,7 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
         {
-            return Ok(await dbManager.GetEntityByIdAsync<FoodOrder>(id));
+            return Ok(await foodOrderDBManager.GetEntityByIdAsync(id));
         }
 
         [Route("status-options")]
@@ -84,14 +86,14 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> SetStatusAsync([FromUri] string id, [FromBody] FoodOrderStatusDto dto)
         {
-            FoodOrder order = await dbManager.GetEntityByIdAsync<FoodOrder>(id);
+            FoodOrder order = await foodOrderDBManager.GetEntityByIdAsync(id);
             FoodOrder.StatusOptions status;
             if (!Enum.TryParse(dto?.Status, false, out status) || order?.Status == status || order?.Status == FoodOrder.StatusOptions.Completed || (order?.Status == FoodOrder.StatusOptions.Discarded && status == FoodOrder.StatusOptions.Completed))
             {
                 return BadRequest();
             }
             order.setStatus(status);
-            return Ok(await dbManager.UpdateEntityAsync(id, order));
+            return Ok(await foodOrderDBManager.UpdateEntityAsync(id, order));
         }
     }
 }
