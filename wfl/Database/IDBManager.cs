@@ -5,13 +5,14 @@ using System;
 
 namespace Symphono.Wfl.Database
 {
-    public interface IDBManager
+    public interface IDBManager<T> where T: IEntity
     {
-        Task<T> InsertEntityAsync<T>(T entity) where T : IEntity;
-        Task<IEnumerable<T>> GetAllEntitiesAsync<T>() where T : IEntity;
-        Task<T> GetEntityByIdAsync<T>(string id) where T : IEntity;
-        Task<IEnumerable<T>> GetEntitiesByDateAsync<T>(DateTime date) where T : IEntity;
-        Task<T> UpdateEntityAsync<T>(string id, T entity) where T: IEntity;
+        Task<T> InsertEntityAsync(T entity);
+        Task<IEnumerable<T>> GetAllEntitiesAsync();
+        Task<T> GetEntityByIdAsync(string id);
+        Task<IEnumerable<T>> GetEntitiesByDateAsync(DateTime date);
+        Task<T> UpdateEntityAsync(string id, T entity);
+        Task<T> DeleteEntityByIdAsync(string id);
         DateTime GetCreationTime(string id);
     }
 }

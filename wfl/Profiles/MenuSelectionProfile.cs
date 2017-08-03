@@ -1,5 +1,6 @@
 ﻿using Hypermedia.Transforms;
 using Hypermedia;
+using Hypermedia.Affordances;
 using Symphono.Wfl.Controllers;
 using Symphono.Wfl.Models;
 
@@ -33,7 +34,13 @@ namespace Symphono.Wfl.Profiles
                             s => mc => mc.GetByIdAsync(s.FoodOrder.Id, s.Id)
                         )
                     )
-                 );
+                )
+                .UseActionTransform(actions => actions
+                    .WithName("delete-menu-selection")
+                    .WithMethod(ActionMethod.Delete)
+                    .WithEncoding("application/x-www-form-urlencoded")
+                    .WithLink<MenuSelection, MenuSelectionsController>(s => mc => mc.DeleteByIdAsync(s.FoodOrder.Id, s.Id))
+                );
         }
     }
 }

@@ -8,16 +8,18 @@ namespace Symphono.Wfl.Controllers
     [RoutePrefix("api/food-order")]
     public class FoodOrdersController : ApiController
     {
-        private IDBManager dbManager { get; }
-        public FoodOrdersController(IDBManager dbManager)
+        private IDBManager<FoodOrder> foodOrderDBManager { get; }
+        private IDBManager<Restaurant> restaurantDBManager { get; }
+        public FoodOrdersController(IDBManager<FoodOrder> foodOrderDBManager, IDBManager<Restaurant> restaurantDBManager)
         {
-            this.dbManager = dbManager;
+            this.foodOrderDBManager = foodOrderDBManager;
+            this.restaurantDBManager = restaurantDBManager;
         }
         [Route("")]
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrderAsync([FromBody] FoodOrderDto order)
         {
-            if (string.IsNullOrEmpty(order?.RestaurantId) || await dbManager.GetEntityByIdAsync<Restaurant>(order.RestaurantId) == null)
+            if (string.IsNullOrEmpty(order?.RestaurantId) || await restaurantDBManager.GetEntityByIdAsync(order.RestaurantId) == null)
             {
                 return BadRequest();
             }
@@ -25,7 +27,7 @@ namespace Symphono.Wfl.Controllers
             {
                 RestaurantId = order.RestaurantId
             };
-            o = await dbManager.InsertEntityAsync(o);
+            o = await foodOrderDBManager.InsertEntityAsync(o);
             return Created(o.Id.ToString(), o);
         }
 
@@ -33,14 +35,14 @@ namespace Symphono.Wfl.Controllers
         [HttpGet]
         public async Task<IHttpActionResult> GetAsync()
         {
-            return Ok(await dbManager.GetAllEntitiesAsync<FoodOrder>());
+            return Ok(await foodOrderDBManager.GetAllEntitiesAsync());
         }
 
         [Route("{id}")]
         [HttpGet]
         public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
         {
-            return Ok(await dbManager.GetEntityByIdAsync<FoodOrder>(id));
+            return Ok(await foodOrderDBManager.GetEntityByIdAsync(id));
         }
     }
 }
