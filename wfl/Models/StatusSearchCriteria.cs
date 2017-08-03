@@ -10,16 +10,9 @@ namespace Symphono.Wfl.Models
     public class StatusSearchCriteria: ICriteria<FoodOrder>
     {
         public FoodOrder.StatusOptions Status { get; set;}
-
-        public async Task<IEnumerable<FoodOrder>> ApplyCriteria(IMongoCollection<FoodOrder> collection)
+        public FilterDefinition<FoodOrder> CreateFilter()
         {
-            IAsyncCursor<FoodOrder> task = await collection.FindAsync(o => o.Status == this.Status);
-            IList<FoodOrder> orders = task.ToList();
-            foreach (FoodOrder order in orders)
-            {
-                order.OnDeserialize();
-            }
-            return orders;
+            return Builders<FoodOrder>.Filter.Eq(nameof(FoodOrder.Status), this.Status);
         }
     }
 }

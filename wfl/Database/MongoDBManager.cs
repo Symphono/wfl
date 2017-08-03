@@ -29,25 +29,27 @@ namespace Symphono.Wfl.Database
             return entity;
         }
 
-        public async Task<IEnumerable<T>> GetAllEntitiesAsync()
+        public async Task<IEnumerable<T>> GetEntitiesAsync(ICriteria<T> criteria)
         {
             IMongoCollection<T> collection = db.GetCollection<T>(collectionName);
-            IAsyncCursor<T> task = await collection.FindAsync(e => true, null);
-            IList<T> entities = task.ToList();
-            if(entities.Count > 0 && entities[0] is IContainerEntity)
+            IAsyncCursor<T> task;
+            if (criteria != null)
             {
-                foreach(T entity in entities)
+               task = await collection.FindAsync(criteria.CreateFilter(), null);
+            }
+            else
+            {
+                task = await collection.FindAsync(e => true, null);
+            }
+            IList<T> entities = task.ToList();
+            if (entities.Count > 0 && entities[0] is IContainerEntity)
+            {
+                foreach (T entity in entities)
                 {
                     (entity as IContainerEntity).OnDeserialize();
                 }
             }
             return entities;
-        }
-
-        public async Task<IEnumerable<T>> GetFilteredEntities(ICriteria<T> criteria)
-        {
-            IMongoCollection<T> collection = db.GetCollection<T>(collectionName);
-            return await criteria.ApplyCriteria(collection);
         }
 
         public async Task<T> GetEntityByIdAsync(string id)

@@ -41,7 +41,7 @@ namespace Symphono.Wfl.Controllers
             IEnumerable<FoodOrder> orders;
             if (criteria?.Status == FoodOrder.StatusOptions.Active || criteria?.Status == FoodOrder.StatusOptions.Completed || criteria?.Status == FoodOrder.StatusOptions.Discarded)
             {
-                orders = await  foodOrderDBManager.GetFilteredEntities(criteria);
+                orders = await foodOrderDBManager.GetEntitiesAsync(criteria);
             }
             else if (criteria != null)
             {
@@ -49,7 +49,7 @@ namespace Symphono.Wfl.Controllers
             }
             else
             {
-                orders = await foodOrderDBManager.GetAllEntitiesAsync();
+                orders = await foodOrderDBManager.GetEntitiesAsync(null);
             }
             FoodOrderCollection foodOrderCollection = new FoodOrderCollection()
             {

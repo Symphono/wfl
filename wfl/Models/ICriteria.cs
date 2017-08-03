@@ -6,6 +6,6 @@ namespace Symphono.Wfl.Models
 {
     public interface ICriteria<E> where E: IEntity
     {
-        Task<IEnumerable<E>> ApplyCriteria(IMongoCollection<E> collection);
+        FilterDefinition<E> CreateFilter();
     }
 }
