@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Web.Configuration;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using MongoDB.Bson;
@@ -8,55 +7,31 @@ using System;
 
 namespace Symphono.Wfl.Database
 {
-    public class MongoDBManager: IDBManager
+    public class MongoDBManager<T>: IDBManager<T> where T: IEntity
     {
         private static string connectionString;
         public static MongoClient client;
         public static IMongoDatabase db;
+        private readonly string collectionName; //{ get; }
         
-        public MongoDBManager()
+        public MongoDBManager(string inputCollectionName, string inputConnectionString)
         {
-            connectionString = WebConfigurationManager.ConnectionStrings["databaseConnectionString"].ConnectionString;
+            connectionString = inputConnectionString;
             client = new MongoClient(connectionString);
             db = client.GetDatabase("WFL");
+            collectionName = inputCollectionName;
         }
 
-        private string GenerateCollectionName<T>()
+        public async Task<T> InsertEntityAsync(T entity)
         {
-            Type entityType = typeof(T);
-            string type = entityType.Name;
-            string collectionName = "";
-            bool started = false;
-            foreach(char c in type)
-            {
-                if (char.IsUpper(c))
-                {
-                    if (started == true)
-                    {
-                        collectionName += '-';
-                    }
-                    else
-                        started = true;
-                    collectionName += char.ToLower(c);
-                }
-                else
-                    collectionName += c;
-            }
-            collectionName += 's';
-            return collectionName;
-
-        }
-
-        public async Task<T> InsertEntityAsync<T>(T entity) where T: IEntity
-        {
-            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            IMongoCollection<T> collection = db.GetCollection<T>(collectionName);
             await collection.InsertOneAsync(entity);
             return entity;
         }
 
-        public async Task<IEnumerable<T>> GetAllEntitiesAsync<T>() where T: IEntity
+        public async Task<IEnumerable<T>> GetAllEntitiesAsync()
         {
-            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            IMongoCollection<T> collection = db.GetCollection<T>(collectionName);
             IAsyncCursor<T> task = await collection.FindAsync(e => true, null);
             IList<T> entities = task.ToList();
             if(entities.Count > 0 && entities[0] is IContainerEntity)
@@ -69,9 +44,9 @@ namespace Symphono.Wfl.Database
             return entities;
         }
 
-        public async Task<T> GetEntityByIdAsync<T>(string id) where T: IEntity
+        public async Task<T> GetEntityByIdAsync(string id)
         {
-            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            IMongoCollection<T> collection = db.GetCollection<T>(collectionName);
             var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
             IAsyncCursor<T> task = await collection.FindAsync(filter, null);
             T entity = await task.FirstOrDefaultAsync();
@@ -82,9 +57,9 @@ namespace Symphono.Wfl.Database
             return entity;
         }
 
-        public async Task<IEnumerable<T>> GetEntitiesByDateAsync<T>(DateTime date) where T : IEntity
+        public async Task<IEnumerable<T>> GetEntitiesByDateAsync(DateTime date)
         {
-            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            IMongoCollection<T> collection = db.GetCollection<T>(collectionName);
             var lowerBound = Builders<T>.Filter.Gt(nameof(IEntity.Id), new ObjectId(date.Date, 0, 0, 0));
             var upperBound = Builders<T>.Filter.Lt(nameof(IEntity.Id), new ObjectId(date.Date.AddDays(1), 0, 0, 0));
             var bounds = new FilterDefinition<T>[] { lowerBound, upperBound };
@@ -94,17 +69,17 @@ namespace Symphono.Wfl.Database
             return task.ToEnumerable();
         }
 
-        public async Task<T> UpdateEntityAsync<T>(string id, T entity) where T : IEntity
+        public async Task<T> UpdateEntityAsync(string id, T entity)
         {
-            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            IMongoCollection<T> collection = db.GetCollection<T>(collectionName);
             var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
             await collection.ReplaceOneAsync(filter, entity);
             return entity;
         }
 
-        public async Task<T> DeleteEntityByIdAsync<T>(string id) where T : IEntity
+        public async Task<T> DeleteEntityByIdAsync(string id)
         {
-            IMongoCollection<T> collection = db.GetCollection<T>(GenerateCollectionName<T>());
+            IMongoCollection<T> collection = db.GetCollection<T>(collectionName);
             var filter = Builders<T>.Filter.Eq(nameof(IEntity.Id), id);
             return await collection.FindOneAndDeleteAsync(filter);
         }
