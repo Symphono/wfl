@@ -12,7 +12,7 @@ namespace Symphono.Wfl.Database
         private static string connectionString;
         public static MongoClient client;
         public static IMongoDatabase db;
-        private string collectionName { get; }
+        private readonly string collectionName; //{ get; }
         
         public MongoDBManager(string inputCollectionName, string inputConnectionString)
         {
