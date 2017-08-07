@@ -54,7 +54,7 @@ namespace Symphono.Wfl.Controllers
                 Description = selection.Description,
             };
             selectionEntity.FoodOrder = order;
-            order.addMenuSelection(selectionEntity);
+            order.AddMenuSelection(selectionEntity);
             return Ok(await foodOrderDBManager.UpdateEntityAsync(foodOrderId, order));
         }
     }
