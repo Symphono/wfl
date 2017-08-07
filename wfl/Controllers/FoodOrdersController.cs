@@ -22,7 +22,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrderAsync([FromBody] FoodOrderDto order)
         {
-            if (string.IsNullOrEmpty(order?.RestaurantId) || await restaurantDBManager.GetEntityByIdAsync(order.RestaurantId) == null)
+            if (order == null || !(await order.CanCreateFoodOrderAsync(restaurantDBManager)))
             {
                 return BadRequest();
             }
@@ -87,12 +87,11 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> SetStatusAsync([FromUri] string id, [FromBody] FoodOrderStatusDto dto)
         {
             FoodOrder order = await foodOrderDBManager.GetEntityByIdAsync(id);
-            FoodOrder.StatusOptions status;
-            if (!Enum.TryParse(dto?.Status, false, out status) || order?.Status == status || order?.Status == FoodOrder.StatusOptions.Completed || (order?.Status == FoodOrder.StatusOptions.Discarded && status == FoodOrder.StatusOptions.Completed))
+            if (dto == null || !(dto.CanSetStatus(order.Status)))
             {
                 return BadRequest();
             }
-            order.setStatus(status);
+            order.setStatus((FoodOrder.StatusOptions) Enum.Parse(typeof(FoodOrder.StatusOptions), dto.Status));
             return Ok(await foodOrderDBManager.UpdateEntityAsync(id, order));
         }
     }
