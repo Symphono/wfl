@@ -28,11 +28,11 @@ namespace Symphono.Wfl.Models
                 }
             }
         }
-        public void setStatus(StatusOptions status)
+        public void SetStatus(StatusOptions status)
         {
             Status = status;
         }
-        public void addMenuSelection(MenuSelection selection)
+        public void AddMenuSelection(MenuSelection selection)
         {
             selection.Id = ObjectId.GenerateNewId().ToString();
             if (MenuSelections == null)
