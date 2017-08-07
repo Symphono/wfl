@@ -46,19 +46,23 @@ namespace Symphono.Wfl.Profiles
                     )
                 )
                 .When(
-                    (o, request) => o.Status == FoodOrder.StatusOptions.Active,
+                    (o, request) => o.CanDiscard(), 
                     config => config
-                        .UseActionTransform(actions => actions
-                            .WithName("discard")
-                            .WithMethod(ActionMethod.Create)
-                            .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.SetStatusAsync(o.Id, null))
-                            .WithField(x => x
+                    .UseActionTransform(actions => actions
+                        .WithName("discard")
+                        .WithMethod(ActionMethod.Create)
+                        .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.SetStatusAsync(o.Id, null))
+                        .WithField(x => x
                                 .WithName(nameof(FoodOrderStatusDto.Status))
                                 .WithType("hidden")
                                 .WithValue("Discarded")
                             )
-                        )
-                        .UseActionTransform(actions => actions
+                    )
+                )
+                .When(
+                    (o, request) => o.CanCreateMenuSelection(),
+                    config => config
+                    .UseActionTransform(actions => actions
                             .WithName("create-menu-selection")
                             .WithRepresentation("menu-selection")
                             .WithMethod(ActionMethod.Create)
@@ -77,7 +81,7 @@ namespace Symphono.Wfl.Profiles
                         )
                 )
                 .When(
-                    (o, request) => o.Status == FoodOrder.StatusOptions.Discarded,
+                    (o, request) => o.CanReactivate(),
                     config => config
                         .UseActionTransform(actions => actions
                             .WithName("reactivate")

@@ -44,5 +44,29 @@ namespace Symphono.Wfl.Models
                 MenuSelections.Add(selection);
             }
         }
+        public bool CanCreateMenuSelection()
+        {
+            if (Status == StatusOptions.Active)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool CanDiscard()
+        {
+            if (Status == StatusOptions.Active)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool CanReactivate()
+        {
+            if (Status == StatusOptions.Discarded)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
