@@ -91,7 +91,7 @@ namespace Symphono.Wfl.Controllers
             {
                 return BadRequest();
             }
-            order.setStatus((FoodOrder.StatusOptions) Enum.Parse(typeof(FoodOrder.StatusOptions), dto.Status));
+            order.SetStatus((FoodOrder.StatusOptions) Enum.Parse(typeof(FoodOrder.StatusOptions), dto.Status));
             return Ok(await foodOrderDBManager.UpdateEntityAsync(id, order));
         }
     }

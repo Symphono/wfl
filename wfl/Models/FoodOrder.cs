@@ -29,11 +29,11 @@ namespace Symphono.Wfl.Models
                 }
             }
         }
-        public void setStatus(StatusOptions status)
+        public void SetStatus(StatusOptions status)
         {
             Status = status;
         }
-        public void addMenuSelection(MenuSelection selection)
+        public void AddMenuSelection(MenuSelection selection)
         {
             selection.Id = ObjectId.GenerateNewId().ToString();
             if (MenuSelections == null)
@@ -44,6 +44,38 @@ namespace Symphono.Wfl.Models
             {
                 MenuSelections.Add(selection);
             }
+        }
+        public bool CanCreateMenuSelection()
+        {
+            if (Status == StatusOptions.Active)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool CanDiscard()
+        {
+            if (Status == StatusOptions.Active)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool CanComplete()
+        {
+            if(Status == StatusOptions.Active)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool CanReactivate()
+        {
+            if (Status == StatusOptions.Discarded)
+            {
+                return true;
+            }
+            return false;
         }
     }
 
