@@ -19,7 +19,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
         {
-            if(restaurant == null || !restaurant.CanCreateRestaurant())
+            if(!Restaurant.CanConstructFromDto(restaurant))
             {
                 return BadRequest();
             }
@@ -36,7 +36,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
-            if(restaurant == null || !await restaurant.CanUpdateRestaurantAsync(id, dbManager))
+            if(!await Restaurant.CanUpdateRestaurantAsync(restaurant, id, dbManager))
             {
                 return BadRequest();
             }
