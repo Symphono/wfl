@@ -87,12 +87,12 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> SetStatusAsync([FromUri] string id, [FromBody] FoodOrderStatusDto dto)
         {
             FoodOrder order = await foodOrderDBManager.GetEntityByIdAsync(id);
-            if (dto == null || !(dto.CanSetStatus(order.Status)))
+            if (order.CanSetStatus(dto))
             {
-                return BadRequest();
+                order.SetStatus((FoodOrder.StatusOptions)Enum.Parse(typeof(FoodOrder.StatusOptions), dto.Status));
+                return Ok(await foodOrderDBManager.UpdateEntityAsync(id, order));
             }
-            order.SetStatus((FoodOrder.StatusOptions) Enum.Parse(typeof(FoodOrder.StatusOptions), dto.Status));
-            return Ok(await foodOrderDBManager.UpdateEntityAsync(id, order));
+            return BadRequest();
         }
     }
 }

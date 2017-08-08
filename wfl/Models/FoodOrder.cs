@@ -2,6 +2,7 @@
 using MongoDB.Bson.Serialization.IdGenerators;
 using System.Collections.Generic;
 using MongoDB.Bson;
+using System;
 
 namespace Symphono.Wfl.Models
 {
@@ -28,6 +29,36 @@ namespace Symphono.Wfl.Models
                     selection.FoodOrder = this;
                 }
             }
+        }
+        public static bool CanDtoStatusConvertToEnum(FoodOrderStatusDto dto)
+        {
+            StatusOptions status;
+            if(Enum.TryParse(dto.Status, false, out status))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool CanSetStatus(FoodOrderStatusDto dto)
+        {
+            if(dto != null && CanDtoStatusConvertToEnum(dto))
+            {
+                StatusOptions dtoStatus = (StatusOptions)Enum.Parse(typeof(StatusOptions), dto.Status);
+                if (dtoStatus == StatusOptions.Active)
+                {
+                    return CanReactivate();
+                }
+                else if (dtoStatus == StatusOptions.Discarded)
+                {
+                    return CanDiscard();
+                }
+                else if (dtoStatus == StatusOptions.Completed)
+                {
+                    return CanComplete();
+                }
+            }
+            return false;
         }
         public void SetStatus(StatusOptions status)
         {
