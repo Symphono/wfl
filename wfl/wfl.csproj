@@ -184,8 +184,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\FoodOrder.cs" />
+    <Compile Include="Models\FoodOrderCollection.cs" />
     <Compile Include="Models\FoodOrderDto.cs" />
     <Compile Include="Models\IContainerEntity.cs" />
+    <Compile Include="Models\ICriteria.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\MenuSelection.cs" />
     <Compile Include="Models\MenuSelectionDto.cs" />
@@ -193,6 +195,9 @@
     <Compile Include="Models\RestaurantCollection.cs" />
     <Compile Include="Models\RestaurantDto.cs" />
     <Compile Include="Models\Root.cs" />
+    <Compile Include="Profiles\StatusOptionsRepresentationProfile.cs" />
+    <Compile Include="Models\StatusSearchCriteria.cs" />
+    <Compile Include="Profiles\FoodOrderCollectionProfile.cs" />
     <Compile Include="Models\FoodOrderStatusDto.cs" />
     <Compile Include="Profiles\FoodOrderProfile.cs" />
     <Compile Include="Profiles\MenuSelectionProfile.cs" />

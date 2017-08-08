@@ -53,7 +53,7 @@ namespace Symphono.Wfl.Controllers
         {
             RestaurantCollection restaurantCollection = new RestaurantCollection()
             {
-                Restaurants = await dbManager.GetAllEntitiesAsync()
+                Restaurants = await dbManager.GetEntitiesAsync(null)
             };
             return Ok(restaurantCollection);
         }

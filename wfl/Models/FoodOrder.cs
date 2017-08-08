@@ -78,4 +78,9 @@ namespace Symphono.Wfl.Models
             return false;
         }
     }
+
+    public class StatusOptionsRepresentation
+    {
+        public IList<string> Values { get; set; }
+    }
 }
