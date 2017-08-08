@@ -22,7 +22,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrderAsync([FromBody] FoodOrderDto order)
         {
-            if (order == null || !(await FoodOrder.CanConstructFromDtoAsync(order, restaurantDBManager)))
+            if (!(await FoodOrder.CanConstructFromDtoAsync(order, restaurantDBManager)))
             {
                 return BadRequest();
             }

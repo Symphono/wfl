@@ -44,7 +44,7 @@ namespace Symphono.Wfl.Models
 
         public static async Task<bool> CanConstructFromDtoAsync(FoodOrderDto dto, IDBManager<Restaurant> restaurantDBManager)
         {
-            if (string.IsNullOrEmpty(dto.RestaurantId) || !await IsRestaurantIdValidAsync(dto.RestaurantId, restaurantDBManager))
+            if (dto == null || string.IsNullOrEmpty(dto.RestaurantId) || !await IsRestaurantIdValidAsync(dto.RestaurantId, restaurantDBManager))
             {
                 return false;
             }
