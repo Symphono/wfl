@@ -1,6 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.IdGenerators;
+using Symphono.Wfl.Database;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MongoDB.Bson;
 using System;
 
@@ -35,6 +37,26 @@ namespace Symphono.Wfl.Models
             StatusOptions status;
             if(Enum.TryParse(dto.Status, false, out status))
             {
+                return true;
+            }
+            return false;
+        }
+
+        public static async Task<bool> CanConstructFromDtoAsync(FoodOrderDto dto, IDBManager<Restaurant> restaurantDBManager)
+        {
+            if (string.IsNullOrEmpty(dto.RestaurantId) || !await IsRestaurantIdValidAsync(dto.RestaurantId, restaurantDBManager))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private static async Task<bool> IsRestaurantIdValidAsync(string RestaurantId, IDBManager<Restaurant> restaurantDBManager)
+        {
+            Restaurant r = await restaurantDBManager.GetEntityByIdAsync(RestaurantId);
+            if (r != null)
+            {
+                System.Diagnostics.Debug.WriteLine(r.Name);
                 return true;
             }
             return false;
