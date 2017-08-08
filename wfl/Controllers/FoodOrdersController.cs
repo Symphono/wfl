@@ -77,7 +77,7 @@ namespace Symphono.Wfl.Controllers
             }
             StatusOptionsRepresentation options = new StatusOptionsRepresentation()
             {
-                values = enumValues
+                Values = enumValues
             };
             return Ok(options);
         }

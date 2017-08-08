@@ -15,7 +15,7 @@ namespace Symphono.Wfl.Profiles
                     .WithRepresentation("status-options")
                 )
                 .UsePropertiesTransform(properties => properties
-                    .WithProperty(o => o.values)
+                    .WithProperty(o => o.Values)
                 )
                 .UseLinkTransform(links => links
                     .WithLink(l => l
