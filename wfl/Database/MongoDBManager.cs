@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using Symphono.Wfl.Models;
 using System;
+using System.Linq;
 
 namespace Symphono.Wfl.Database
 {
@@ -42,13 +43,7 @@ namespace Symphono.Wfl.Database
                 task = await collection.FindAsync(e => true, null);
             }
             IList<T> entities = task.ToList();
-            if (entities.Count > 0 && entities[0] is IContainerEntity)
-            {
-                foreach (T entity in entities)
-                {
-                    (entity as IContainerEntity).OnDeserialize();
-                }
-            }
+            entities.OfType<IContainerEntity>().ToList().ForEach(entity => entity.OnDeserialize());
             return entities;
         }
 
