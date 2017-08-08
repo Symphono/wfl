@@ -56,7 +56,6 @@ namespace Symphono.Wfl.Models
             Restaurant r = await restaurantDBManager.GetEntityByIdAsync(RestaurantId);
             if (r != null)
             {
-                System.Diagnostics.Debug.WriteLine(r.Name);
                 return true;
             }
             return false;
