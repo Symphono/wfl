@@ -10,7 +10,8 @@ namespace Symphono.Wfl.Models
         public enum StatusOptions
         {
             Active = 1,
-            Discarded
+            Discarded,
+            Completed
         }
         [BsonIgnoreIfNull]
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
@@ -55,6 +56,14 @@ namespace Symphono.Wfl.Models
         public bool CanDiscard()
         {
             if (Status == StatusOptions.Active)
+            {
+                return true;
+            }
+            return false;
+        }
+        public bool CanComplete()
+        {
+            if(Status == StatusOptions.Active)
             {
                 return true;
             }

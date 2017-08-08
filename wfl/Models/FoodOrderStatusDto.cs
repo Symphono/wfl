@@ -22,7 +22,7 @@ namespace Symphono.Wfl.Models
         private bool CanTransitionFromCurrentStatus(FoodOrder.StatusOptions currentStatus)
         {
             FoodOrder.StatusOptions status = (FoodOrder.StatusOptions) Enum.Parse(typeof(FoodOrder.StatusOptions), Status, false);
-            if (currentStatus == status)
+            if (currentStatus == status || currentStatus == FoodOrder.StatusOptions.Completed || (currentStatus == FoodOrder.StatusOptions.Discarded && status == FoodOrder.StatusOptions.Completed))
             {
                 return false;
             }

@@ -56,7 +56,7 @@ namespace Symphono.Wfl.Profiles
                                 .WithName(nameof(FoodOrderStatusDto.Status))
                                 .WithType("hidden")
                                 .WithValue("Discarded")
-                            )
+                        )
                     )
                 )
                 .When(
@@ -77,6 +77,20 @@ namespace Symphono.Wfl.Profiles
                                 .WithName(nameof(MenuSelectionDto.Description))
                                 .WithType("text")
                                 .WithTitle("Description")
+                            )
+                        )
+                )
+                .When(
+                    (o, request) => o.CanComplete(),
+                    config => config
+                        .UseActionTransform(actions => actions
+                            .WithName("complete")
+                            .WithMethod(ActionMethod.Create)
+                            .WithLink<FoodOrder, FoodOrdersController>(o => fc => fc.SetStatusAsync(o.Id, null))
+                            .WithField(x => x
+                                .WithName(nameof(FoodOrderStatusDto.Status))
+                                .WithType("hidden")
+                                .WithValue("Completed")
                             )
                         )
                 )
