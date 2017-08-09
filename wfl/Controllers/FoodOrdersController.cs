@@ -1,5 +1,8 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Web.Http;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using Symphono.Wfl.Models;
 using Symphono.Wfl.Database;
 
@@ -19,7 +22,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateFoodOrderAsync([FromBody] FoodOrderDto order)
         {
-            if (string.IsNullOrEmpty(order?.RestaurantId) || await restaurantDBManager.GetEntityByIdAsync(order.RestaurantId) == null)
+            if (!(await FoodOrder.CanConstructFromDtoAsync(order, restaurantDBManager)))
             {
                 return BadRequest();
             }
@@ -33,9 +36,27 @@ namespace Symphono.Wfl.Controllers
 
         [Route("")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetAsync()
+        public async Task<IHttpActionResult> GetAsync([FromUri] StatusSearchCriteria criteria)
         {
-            return Ok(await foodOrderDBManager.GetAllEntitiesAsync());
+            IEnumerable<FoodOrder> orders;
+            if (criteria?.Status == FoodOrder.StatusOptions.Active || criteria?.Status == FoodOrder.StatusOptions.Completed || criteria?.Status == FoodOrder.StatusOptions.Discarded)
+            {
+                orders = await foodOrderDBManager.GetEntitiesAsync(criteria);
+            }
+            else if (criteria != null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                orders = await foodOrderDBManager.GetEntitiesAsync(null);
+            }
+            FoodOrderCollection foodOrderCollection = new FoodOrderCollection()
+            {
+                FoodOrders = orders,
+                Criteria = criteria
+            };
+            return Ok(foodOrderCollection);
         }
 
         [Route("{id}")]
@@ -43,6 +64,35 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> GetByIdAsync([FromUri] string id)
         {
             return Ok(await foodOrderDBManager.GetEntityByIdAsync(id));
+        }
+
+        [Route("status-options")]
+        [HttpGet]
+        public IHttpActionResult GetStatusOptions()
+        {
+            IList<string> enumValues = new List<string>();
+            foreach(var value in Enum.GetValues(typeof(FoodOrder.StatusOptions)))
+            {
+                enumValues.Add(value.ToString());
+            }
+            StatusOptionsRepresentation options = new StatusOptionsRepresentation()
+            {
+                Values = enumValues
+            };
+            return Ok(options);
+        }
+
+        [Route("{id}")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SetStatusAsync([FromUri] string id, [FromBody] FoodOrderStatusDto dto)
+        {
+            FoodOrder order = await foodOrderDBManager.GetEntityByIdAsync(id);
+            if (order.CanSetStatus(dto))
+            {
+                order.SetStatus((FoodOrder.StatusOptions)Enum.Parse(typeof(FoodOrder.StatusOptions), dto.Status));
+                return Ok(await foodOrderDBManager.UpdateEntityAsync(id, order));
+            }
+            return BadRequest();
         }
     }
 }

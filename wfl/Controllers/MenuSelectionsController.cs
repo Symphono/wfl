@@ -13,7 +13,7 @@ namespace Symphono.Wfl.Controllers
     {
         private IDBManager<FoodOrder> foodOrderDBManager { get; }
         public MenuSelectionsController(IDBManager<FoodOrder> foodOrderDBManager) {
-           this.foodOrderDBManager = foodOrderDBManager;
+            this.foodOrderDBManager = foodOrderDBManager;
         }
 
         [Route("{selectionId}")]
@@ -43,19 +43,22 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateMenuSelectionAsync(MenuSelectionDto selection, [FromUri] string foodOrderId)
         {
-            FoodOrder order = await foodOrderDBManager.GetEntityByIdAsync(foodOrderId);
-            if (order == null || foodOrderDBManager.GetCreationTime(foodOrderId).Date != DateTime.Now.Date || string.IsNullOrEmpty(selection?.Description) || string.IsNullOrEmpty(selection?.OrdererName))
+            if (!string.IsNullOrEmpty(foodOrderId))
             {
-                return BadRequest();
+                FoodOrder order = await foodOrderDBManager.GetEntityByIdAsync(foodOrderId);
+                if(order?.CanAddMenuSelection(selection) == true)
+                {
+                    MenuSelection selectionEntity = new MenuSelection()
+                    {
+                        OrdererName = selection.OrdererName,
+                        Description = selection.Description
+                    };
+                    selectionEntity.FoodOrder = order;
+                    order.AddMenuSelection(selectionEntity);
+                    return Ok(await foodOrderDBManager.UpdateEntityAsync(foodOrderId, order));
+                }
             }
-            MenuSelection selectionEntity = new MenuSelection()
-            {
-                OrdererName = selection.OrdererName,
-                Description = selection.Description,
-            };
-            selectionEntity.FoodOrder = order;
-            order.addMenuSelection(selectionEntity);
-            return Ok(await foodOrderDBManager.UpdateEntityAsync(foodOrderId, order));
+            return BadRequest();
         }
     }
 }

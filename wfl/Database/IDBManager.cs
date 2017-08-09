@@ -8,7 +8,7 @@ namespace Symphono.Wfl.Database
     public interface IDBManager<T> where T: IEntity
     {
         Task<T> InsertEntityAsync(T entity);
-        Task<IEnumerable<T>> GetAllEntitiesAsync();
+        Task<IEnumerable<T>> GetEntitiesAsync(ICriteria<T> criteria);
         Task<T> GetEntityByIdAsync(string id);
         Task<IEnumerable<T>> GetEntitiesByDateAsync(DateTime date);
         Task<T> UpdateEntityAsync(string id, T entity);

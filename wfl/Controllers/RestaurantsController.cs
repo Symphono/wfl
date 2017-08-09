@@ -19,7 +19,7 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateRestaurantAsync([FromBody] RestaurantDto restaurant)
         {
-            if (string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
+            if(!Restaurant.CanConstructFromDto(restaurant))
             {
                 return BadRequest();
             }
@@ -36,12 +36,12 @@ namespace Symphono.Wfl.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
-            if (string.IsNullOrEmpty(id) || await dbManager.GetEntityByIdAsync(id) == null || string.IsNullOrEmpty(restaurant?.Name) || (restaurant.MenuLink != null && !Uri.IsWellFormedUriString(restaurant.MenuLink.ToString(), UriKind.Absolute)))
+            Restaurant restaurantEntity = await dbManager.GetEntityByIdAsync(id);
+            if (restaurantEntity == null || !Restaurant.CanConstructFromDto(restaurant))
             {
                 return BadRequest();
             }
 
-            Restaurant restaurantEntity = await dbManager.GetEntityByIdAsync(id);
             restaurantEntity.Name = restaurant.Name;
             restaurantEntity.MenuLink = restaurant.MenuLink;
             return Ok(await dbManager.UpdateEntityAsync(id, restaurantEntity));
@@ -53,7 +53,7 @@ namespace Symphono.Wfl.Controllers
         {
             RestaurantCollection restaurantCollection = new RestaurantCollection()
             {
-                Restaurants = await dbManager.GetAllEntitiesAsync()
+                Restaurants = await dbManager.GetEntitiesAsync(null)
             };
             return Ok(restaurantCollection);
         }

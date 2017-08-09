@@ -1,4 +1,7 @@
-﻿namespace Symphono.Wfl.Models
+﻿using System.Threading.Tasks;
+using Symphono.Wfl.Database;
+
+namespace Symphono.Wfl.Models
 {
     public class MenuSelectionDto
     {
