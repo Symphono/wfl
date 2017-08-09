@@ -36,12 +36,12 @@ namespace Symphono.Wfl.Controllers
         [HttpPut]
         public async Task<IHttpActionResult> UpdateAsync([FromUri] string id, [FromBody] RestaurantDto restaurant)
         {
-            if(!await Restaurant.CanUpdateRestaurantAsync(restaurant, id, dbManager))
+            Restaurant restaurantEntity = await dbManager.GetEntityByIdAsync(id);
+            if (restaurantEntity == null || !Restaurant.CanConstructFromDto(restaurant))
             {
                 return BadRequest();
             }
 
-            Restaurant restaurantEntity = await dbManager.GetEntityByIdAsync(id);
             restaurantEntity.Name = restaurant.Name;
             restaurantEntity.MenuLink = restaurant.MenuLink;
             return Ok(await dbManager.UpdateEntityAsync(id, restaurantEntity));
