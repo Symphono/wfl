@@ -32,6 +32,17 @@ namespace Symphono.Wfl.Models
                 }
             }
         }
+        public bool CanAddMenuSelection(MenuSelectionDto dto)
+        {
+            if (this.Status == StatusOptions.Active)
+            {
+                if (dto != null && !string.IsNullOrEmpty(dto.OrdererName) && !string.IsNullOrEmpty(dto.Description))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public static bool CanDtoStatusConvertToEnum(FoodOrderStatusDto dto)
         {
             StatusOptions status;

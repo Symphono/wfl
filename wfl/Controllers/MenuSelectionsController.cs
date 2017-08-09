@@ -43,19 +43,22 @@ namespace Symphono.Wfl.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> CreateMenuSelectionAsync(MenuSelectionDto selection, [FromUri] string foodOrderId)
         {
-            if (selection == null || !await MenuSelection.CanConstructFromDtoAsync(selection, foodOrderId, foodOrderDBManager))
+            if (!string.IsNullOrEmpty(foodOrderId))
             {
-                return BadRequest();
+                FoodOrder order = await foodOrderDBManager.GetEntityByIdAsync(foodOrderId);
+                if(order?.CanAddMenuSelection(selection) == true)
+                {
+                    MenuSelection selectionEntity = new MenuSelection()
+                    {
+                        OrdererName = selection.OrdererName,
+                        Description = selection.Description
+                    };
+                    selectionEntity.FoodOrder = order;
+                    order.AddMenuSelection(selectionEntity);
+                    return Ok(await foodOrderDBManager.UpdateEntityAsync(foodOrderId, order));
+                }
             }
-            FoodOrder order = await foodOrderDBManager.GetEntityByIdAsync(foodOrderId);
-            MenuSelection selectionEntity = new MenuSelection()
-            {
-                OrdererName = selection.OrdererName,
-                Description = selection.Description
-            };
-            selectionEntity.FoodOrder = order;
-            order.AddMenuSelection(selectionEntity);
-            return Ok(await foodOrderDBManager.UpdateEntityAsync(foodOrderId, order));
+            return BadRequest();
         }
     }
 }
