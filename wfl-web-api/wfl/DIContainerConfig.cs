@@ -10,7 +10,7 @@ namespace Symphono.Wfl
     {
         public static void RegisterElements(IUnityContainer container)
         {
-            string connectionString = WebConfigurationManager.ConnectionStrings["remoteDBConnectionString"].ConnectionString;
+            string connectionString = WebConfigurationManager.ConnectionStrings["databaseConnectionString"].ConnectionString;
             container.RegisterType<IDBManager<FoodOrder>, MongoDBManager<FoodOrder>>(new InjectionConstructor("food-orders", connectionString));
             container.RegisterType<IDBManager<Restaurant>, MongoDBManager<Restaurant>>(new InjectionConstructor("restaurants", connectionString));
             container.RegisterType(typeof(RestaurantsController));
