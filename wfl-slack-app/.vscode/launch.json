@@ -1,0 +1,19 @@
+{
+    "version": "0.0.0",
+    "configurations": [
+        {
+            "envFile": "${workspaceRoot}/.env",
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceRoot}/src/index.js"
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to Port",
+            "address": "localhost",
+            "port": 5858
+        }
+    ]
+}
