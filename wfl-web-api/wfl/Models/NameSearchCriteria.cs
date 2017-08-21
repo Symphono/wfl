@@ -9,5 +9,14 @@ namespace Symphono.Wfl.Models
         {
             return Builders<Restaurant>.Filter.Eq(nameof(Restaurant.Name), this.Name);
         }
+
+        public bool HasCriteria()
+        {
+            if(string.IsNullOrEmpty(Name))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

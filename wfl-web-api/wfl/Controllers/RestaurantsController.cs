@@ -53,13 +53,13 @@ namespace Symphono.Wfl.Controllers
         public async Task<IHttpActionResult> GetAsync([FromUri] NameSearchCriteria criteria)
         {
             IEnumerable<Restaurant> restaurants;
-            if (String.IsNullOrEmpty(criteria?.Name))
+            if (criteria?.HasCriteria() == true)
             {
-                restaurants = await dbManager.GetEntitiesAsync(null);
+                restaurants = await dbManager.GetEntitiesAsync(criteria);
             }
             else
             {
-                restaurants = await dbManager.GetEntitiesAsync(criteria);
+                restaurants = await dbManager.GetEntitiesAsync(null);
             }
             RestaurantCollection restaurantCollection = new RestaurantCollection()
             {
