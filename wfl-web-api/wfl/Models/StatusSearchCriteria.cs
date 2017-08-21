@@ -14,5 +14,14 @@ namespace Symphono.Wfl.Models
         {
             return Builders<FoodOrder>.Filter.Eq(nameof(FoodOrder.Status), this.Status);
         }
+
+        public bool HasCriteria()
+        {
+            if (Status == FoodOrder.StatusOptions.Active || Status == FoodOrder.StatusOptions.Completed || Status == FoodOrder.StatusOptions.Discarded)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

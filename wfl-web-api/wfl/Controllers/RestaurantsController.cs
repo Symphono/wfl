@@ -2,6 +2,7 @@
 using System.Web.Http;
 using System.Threading.Tasks;
 using Symphono.Wfl.Models;
+using System.Collections.Generic;
 using Symphono.Wfl.Database;
 
 namespace Symphono.Wfl.Controllers
@@ -49,11 +50,21 @@ namespace Symphono.Wfl.Controllers
 
         [Route("")]
         [HttpGet]
-        public async Task<IHttpActionResult> GetAsync()
+        public async Task<IHttpActionResult> GetAsync([FromUri] NameSearchCriteria criteria)
         {
+            IEnumerable<Restaurant> restaurants;
+            if (criteria?.HasCriteria() == true)
+            {
+                restaurants = await dbManager.GetEntitiesAsync(criteria);
+            }
+            else
+            {
+                restaurants = await dbManager.GetEntitiesAsync(null);
+            }
             RestaurantCollection restaurantCollection = new RestaurantCollection()
             {
-                Restaurants = await dbManager.GetEntitiesAsync(null)
+                Restaurants = restaurants,
+                Criteria = criteria
             };
             return Ok(restaurantCollection);
         }
