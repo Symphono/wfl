@@ -7,5 +7,6 @@ namespace Symphono.Wfl.Models
     public interface ICriteria<E> where E: IEntity
     {
         FilterDefinition<E> CreateFilter();
+        bool HasCriteria();
     }
 }

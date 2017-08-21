@@ -26,7 +26,7 @@ namespace Symphono.Wfl.Profiles
                 )
                 .WithLink<RestaurantCollection, RestaurantsController>(
                     "self",
-                    rc => c => c.GetAsync()
+                    rc => c => c.GetAsync(rc.Criteria)
                 )
                 .UseActionTransform(actions => actions
                     .WithName("create-restaurant")
@@ -43,6 +43,18 @@ namespace Symphono.Wfl.Profiles
                         .WithName(nameof(RestaurantDto.MenuLink))
                         .WithType("text")
                         .WithTitle("Menu Link")
+                    )
+                )
+                .UseActionTransform(actions => actions
+                    .WithName("filter-restaurants")
+                    .WithRepresentation("collection")
+                    .WithMethod(ActionMethod.Read)
+                    .WithEncoding("application/x-www-form-urlencoded")
+                    .WithLink<RestaurantCollection, RestaurantsController>(c => c.GetAsync(null))
+                    .WithField(x => x
+                        .WithName(nameof(Restaurant.Name))
+                        .WithType("text")
+                        .WithTitle("Name")
                     )
                 );
         }
