@@ -29,7 +29,7 @@ namespace Symphono.Wfl.Profiles
                         .WithRelation("restaurants")
                         .WithRepresentation("restaurant")
                         .WithLink<Root, RestaurantsController>(
-                            root => rc => rc.GetAsync()
+                            root => rc => rc.GetAsync(null)
                         )
                     )
                )
