@@ -37,10 +37,18 @@ function getRestaurants(callback)
     let options = {
         url: process.env.DB_URI + '/restaurant'
     }
-
     request.get(options, function(err, res, body) {
-        let json = JSON.parse(body);
-        callback(json);
+        callback(JSON.parse(body));
+    });
+}
+
+function getFoodOrderById(id, callback)
+{
+    let options = {
+        url: process.env.DB_URI + '/food-order/' + id
+    }
+    request.get(options, function(err, res, body){
+        callback(JSON.parse(body));
     });
 }
 
@@ -63,6 +71,37 @@ module.exports = {
                 }
                 callback(names);
             }
+        });
+    },
+    getMenuSelectionTable: function(foodOrderId, callback) {
+        getFoodOrderById(foodOrderId, function(json){
+            if (json.entities)
+            {
+                console.log(json.entities);
+                //Unfinished implementation
+            }
+        })
+    },
+    postMenuSelection: function(foodOrderId, name, description, callback) {
+        let options = {
+            url: process.env.DB_URI + '/food-order/' + foodOrderId + '/menu-selection',
+            form: {
+                OrdererName: name,
+                Description: description
+            }
+        }
+
+        request.post(options, function(err, res, body){
+            let json = JSON.parse(body);
+            callback(json.entities[json.entities.length - 1]);
+        });
+    },
+    deleteMenuSelection: function(foodOrderId, menuSelectionId, callback) {
+        let options = {
+            url: process.env.DB_URI + '/food-order/' + foodOrderId + '/menu-selection/' + menuSelectionId,
+        }
+        request.delete(options, function(err, res, body){
+            callback();
         });
     }
 };
