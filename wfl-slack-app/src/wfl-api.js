@@ -41,8 +41,11 @@ function getRestaurantByName(name, callback) {
 
     request.get(options, function(err, res, body) {
         let json = JSON.parse(body);
-        if(json.entities[0]) {
+        if(json.entities && json.entities[0]) {
             callback(json.entities[0]);
+        }
+        else {
+            callback();
         }
     });
 }

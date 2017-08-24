@@ -18,7 +18,7 @@ function verifyAndSetStatus(bot, data, orderIdTable, status) {
                 else if (status === Status.COMPLETED) {
                     actionCompleted = 'completed';
                 }
-                bot.postMessage(data.channel, 'The order has been ' + actionCompleted);
+                bot.postMessage(data.channel, 'The order has been ' + actionCompleted + '.');
             });
         }
         else {
@@ -78,10 +78,15 @@ module.exports = {
             {
                 var restaurantName = data.text.substring(data.text.indexOf('wfl order create') + 17);
                 wflApi.getRestaurantByName(restaurantName, function(restaurantJson) {
-                    wflApi.postFoodOrder(restaurantJson.properties.Id, function(foodOrderJson){
-                        orderIdTable[data.channel] = foodOrderJson.properties.Id;
-                        bot.postMessage(data.channel, 'OK, the food order has been created. You may now add menu selections!');
-                    })
+                    if (restaurantJson)
+                    {
+                        wflApi.postFoodOrder(restaurantJson.properties.Id, function(foodOrderJson){
+                            orderIdTable[data.channel] = foodOrderJson.properties.Id;
+                            bot.postMessage(data.channel, `OK, the food order has been created. You may now add menu selections using 'wfl gimme &lt; description &gt;'!`);
+                        })
+                    }
+                    else
+                        bot.postMessage(data.channel, 'The restaurant entered does not exist.')
                 });
             }
         });
@@ -94,7 +99,7 @@ module.exports = {
             }
             else
             {
-                wflApi.getRestaurants(function(restaurantsJson) {
+                wflApi.getAllRestaurants(function(restaurantsJson) {
                     var message = 'This channel does not have an active order. Here is a list of restaurants you may want to choose from!\n';
                     for (let restaurant of restaurantsJson.entities)
                     {
@@ -136,6 +141,9 @@ module.exports = {
                     }
                     bot.postMessage(data.channel, message);
                 });
+            }
+            else {
+                bot.postMessage(data.channel, 'This channel does not have an active order.');
             }
         });
     },
