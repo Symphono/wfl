@@ -20,5 +20,12 @@ module.exports = {
         .then(slackApiResponse => {
             return slackApiResponse.user.real_name;
         });
+    },
+    sendResponse: function(url, text) {
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify({ text })
+        });
     }
 }

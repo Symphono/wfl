@@ -1,6 +1,6 @@
 var Slackbot = require('slackbots');
 var request = require('request');
-var orderManager = require('./handle-wfl-request')
+var handleWflRequest = require('./handle-wfl-request')
 
 var orderIdTable = {};
 var menuSelectionIdTable = {};
@@ -11,23 +11,24 @@ var bot = new Slackbot({
 });
 
 bot.on('message', function(data) {
-    if (data.text)
-    {
-        if (data.text.indexOf('wfl order create') != -1)
-        {
-            orderManager.handleCreateOrderRequest(bot, data, orderIdTable);
+    if (data.text) {
+        if (data.text.indexOf('wfl order create') != -1) {
+            handleWflRequest.handleCreateOrderRequest(bot, data, orderIdTable);
         }
-        else if (data.text.indexOf('wfl selections') != -1)
-        {
-            orderManager.handleListCurrentMenuSelectionsRequest(bot, data, orderIdTable);
+        else if (data.text.indexOf('wfl order details') != -1) {
+            handleWflRequest.handleOrderDetailsRequest(bot, data, orderIdTable);
         }
-        else if (data.text.indexOf('wfl gimme') != -1)
-        {
-            orderManager.handleGimmeRequest(bot, data, orderIdTable, menuSelectionIdTable)
+        else if (data.text.indexOf('wfl order discard') != -1) {
+            handleWflRequest.handleOrderDiscardRequest(bot, data, orderIdTable);
         }
-        else if (data.text.indexOf('wfl') != -1)
-        {
-            orderManager.handleWflRequest(bot, data, orderIdTable);
+        else if (data.text.indexOf('wfl order complete') != -1) {
+            handleWflRequest.handleOrderCompleteRequest(bot, data, orderIdTable);
+        }
+        else if (data.text.indexOf('wfl gimme') != -1) {
+            handleWflRequest.handleGimmeRequest(bot, data, orderIdTable, menuSelectionIdTable)
+        }
+        else if (data.text.indexOf('wfl') != -1) {
+            handleWflRequest.handleWflRequest(bot, data, orderIdTable);
         }
     }
 });

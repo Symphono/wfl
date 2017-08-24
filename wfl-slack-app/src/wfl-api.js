@@ -1,21 +1,5 @@
 var request = require('request');
 
-function getRestaurantIdByName(name, callback) {
-    let options = {
-        url: process.env.DB_URI + '/restaurant',
-        form: {
-            Name: name
-        }
-    }
-
-    request.get(options, function(err, res, body) {
-        let json = JSON.parse(body);
-        if(json.entities[0]) {
-            callback(json.entities[0].properties.Id);
-        }
-    });
-}
-
 function postFoodOrder(restaurantId, callback) {
     let options = {
         url: process.env.DB_URI + '/food-order',
@@ -27,13 +11,12 @@ function postFoodOrder(restaurantId, callback) {
     request.post(options, function(err, res, body) {
         let json = JSON.parse(body);
         if (json) {
-            callback(json.properties.Id);
+            callback(json);
         }
     });
 }
 
-function getRestaurants(callback)
-{
+function getAllRestaurants(callback) {
     let options = {
         url: process.env.DB_URI + '/restaurant'
     }
@@ -42,8 +25,7 @@ function getRestaurants(callback)
     });
 }
 
-function getFoodOrderById(id, callback)
-{
+function getFoodOrderById(id, callback) {
     let options = {
         url: process.env.DB_URI + '/food-order/' + id
     }
@@ -52,36 +34,24 @@ function getFoodOrderById(id, callback)
     });
 }
 
+function getRestaurantByName(name, callback) {
+    let options = {
+        url: process.env.DB_URI + '/restaurant' + '?Name=' + name,
+    }
+
+    request.get(options, function(err, res, body) {
+        let json = JSON.parse(body);
+        if(json.entities[0]) {
+            callback(json.entities[0]);
+        }
+    });
+}
+
 module.exports = {
-    createFoodOrderFromRestaurantName: function(name, callback) {
-        getRestaurantIdByName(name, function(id) {
-            postFoodOrder(id, function(id) {
-                callback(id);
-            })
-        })
-    },
-    getArrayOfRestaurantNames: function(callback) {
-        getRestaurants(function(json) {
-            var names = [];
-            if (json.entities)
-            {
-                for (let restaurant of json.entities)
-                {
-                    names.push(restaurant.properties.Name);
-                }
-                callback(names);
-            }
-        });
-    },
-    getMenuSelectionTable: function(foodOrderId, callback) {
-        getFoodOrderById(foodOrderId, function(json){
-            if (json.entities)
-            {
-                console.log(json.entities);
-                //Unfinished implementation
-            }
-        })
-    },
+    getRestaurantByName: getRestaurantByName,
+    postFoodOrder: postFoodOrder,
+    getAllRestaurants: getAllRestaurants,
+    getFoodOrderById: getFoodOrderById,
     postMenuSelection: function(foodOrderId, name, description, callback) {
         let options = {
             url: process.env.DB_URI + '/food-order/' + foodOrderId + '/menu-selection',
@@ -90,8 +60,7 @@ module.exports = {
                 Description: description
             }
         }
-
-        request.post(options, function(err, res, body){
+        request.post(options, function(err, res, body) {
             let json = JSON.parse(body);
             callback(json.entities[json.entities.length - 1]);
         });
@@ -100,8 +69,27 @@ module.exports = {
         let options = {
             url: process.env.DB_URI + '/food-order/' + foodOrderId + '/menu-selection/' + menuSelectionId,
         }
-        request.delete(options, function(err, res, body){
+        request.delete(options, function(err, res, body) {
             callback();
+        });
+    },
+    getRestaurantById: function(id, callback) {
+        let options = {
+            url: process.env.DB_URI + '/restaurant/' + id
+        }
+        request.get(options, function(err, res, body) {
+            callback(JSON.parse(body));
+        });
+    },
+    setFoodOrderStatus: function(id, status, callback) {
+        let options = {
+            url: process.env.DB_URI + '/food-order/' + id,
+            form: {
+                Status: status
+            }
+        }
+        request.post(options, function(err, res, body) {
+            callback(JSON.parse(body));
         });
     }
 };
