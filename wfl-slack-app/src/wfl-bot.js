@@ -15,9 +15,6 @@ bot.on('message', function(data) {
         if (data.text.indexOf('wfl order create') != -1) {
             handleWflRequest.handleOrderCreateRequest(bot, data, orderIdTable);
         }
-        else if (data.text.indexOf('wfl order details') != -1) {
-            handleWflRequest.handleOrderDetailsRequest(bot, data, orderIdTable);
-        }
         else if (data.text.indexOf('wfl order discard') != -1) {
             handleWflRequest.handleOrderDiscardRequest(bot, data, orderIdTable);
         }

@@ -7,6 +7,21 @@ var Status = {
     COMPLETED: 3
 }
 
+function getOrderDetails(bot, data, foodOrderJson) {
+    wflApi.getRestaurantById(foodOrderJson.properties.RestaurantId, function(restaurantJson) {
+        var message = 'Order Details:\n';
+        let restaurantName = restaurantJson.properties.Name;
+        message = message + 'Restaurant: ' + restaurantName + '\n';
+        if (foodOrderJson.entities) {
+            for (let selection of foodOrderJson.entities)
+            {
+                message = message + selection.properties.OrdererName + ': ' + selection.properties.Description + '\n';
+            }
+        }
+        bot.postMessage(data.channel, message);
+    });
+}
+
 function verifyAndSetStatus(bot, data, orderIdTable, status) {
     verifyOrderIsActiveAndContinue(data, orderIdTable, function(activeOrderExists, foodOrderJson) {
         if (activeOrderExists) {
@@ -28,6 +43,10 @@ function verifyAndSetStatus(bot, data, orderIdTable, status) {
 }
 
 function createMenuSelection(bot, data, orderIdTable, menuSelectionIdTable, description) {
+    if(menuSelectionIdTable[data.user])
+    {
+        wflApi.deleteMenuSelection(orderIdTable[data.channel], menuSelectionIdTable[data.user], function(){});
+    }
     return slackApi
         .getUserInfo(data.user)
         .then(name => wflApi.postMenuSelection(orderIdTable[data.channel], name, description, function(selectionJson) {
@@ -92,10 +111,10 @@ module.exports = {
         });
     },
     handleWflRequest: function(bot, data, orderIdTable) {
-        verifyOrderIsActiveAndContinue(data, orderIdTable, function(activeOrderExists) {
+        verifyOrderIsActiveAndContinue(data, orderIdTable, function(activeOrderExists, foodOrderJson) {
             if (activeOrderExists)
             {
-                bot.postMessage(data.channel, 'There is currently an active order for this channel.');
+                getOrderDetails(bot, data, foodOrderJson);
             }
             else
             {
@@ -125,27 +144,6 @@ module.exports = {
                 bot.postMessage(data.channel, 'This channel does not have an active order.');
             }
         })
-    },
-    handleOrderDetailsRequest: function(bot, data, orderIdTable) {
-        verifyOrderIsActiveAndContinue(data, orderIdTable, function(activeOrderExists, foodOrderJson) {
-            if (activeOrderExists) {
-                wflApi.getRestaurantById(foodOrderJson.properties.RestaurantId, function(restaurantJson) {
-                    var message = 'Order Details:\n';
-                    let restaurantName = restaurantJson.properties.Name;
-                    message = message + 'Restaurant: ' + restaurantName + '\n';
-                    if (foodOrderJson.entities) {
-                        for (let selection of foodOrderJson.entities)
-                        {
-                            message = message + selection.properties.OrdererName + ': ' + selection.properties.Description + '\n';
-                        }
-                    }
-                    bot.postMessage(data.channel, message);
-                });
-            }
-            else {
-                bot.postMessage(data.channel, 'This channel does not have an active order.');
-            }
-        });
     },
     handleOrderDiscardRequest: function(bot, data, orderIdTable) {
         verifyAndSetStatus(bot, data, orderIdTable, Status.DISCARDED);
