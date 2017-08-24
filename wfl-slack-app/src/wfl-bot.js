@@ -13,7 +13,7 @@ var bot = new Slackbot({
 bot.on('message', function(data) {
     if (data.text) {
         if (data.text.indexOf('wfl order create') != -1) {
-            handleWflRequest.handleCreateOrderRequest(bot, data, orderIdTable);
+            handleWflRequest.handleOrderCreateRequest(bot, data, orderIdTable);
         }
         else if (data.text.indexOf('wfl order details') != -1) {
             handleWflRequest.handleOrderDetailsRequest(bot, data, orderIdTable);

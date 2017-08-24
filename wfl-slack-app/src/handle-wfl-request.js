@@ -68,7 +68,7 @@ function verifyOrderIsActiveAndContinue(data, orderIdTable, callback) {
 }
 
 module.exports = {
-    handleCreateOrderRequest: function(bot, data, orderIdTable) {
+    handleOrderCreateRequest: function(bot, data, orderIdTable) {
         verifyOrderIsActiveAndContinue(data,orderIdTable, function(activeOrderExists) {
             if (activeOrderExists)
             {
