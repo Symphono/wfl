@@ -11,7 +11,7 @@ var bot = new Slackbot({
 });
 
 bot.on('message', function(data) {
-    if (data.text) {
+    if (data.text && data.subtype !== 'bot_message') {
         if (data.text.indexOf('wfl order create') != -1) {
             handleWflRequest.handleOrderCreateRequest(bot, data, orderIdTable);
         }
