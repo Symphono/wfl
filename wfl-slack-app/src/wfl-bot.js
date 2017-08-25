@@ -1,5 +1,4 @@
 var Slackbot = require('slackbots');
-var request = require('request');
 var handleWflRequest = require('./handle-wfl-request')
 
 var orderIdTable = {};
