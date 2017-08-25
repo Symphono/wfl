@@ -13,6 +13,7 @@
     "slackbot"
   ],
   "author": "Tej Nagaraja <tnagaraja@symphono.com>",
+  "license": "MIT",
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "query-string": "^5.0.0",
