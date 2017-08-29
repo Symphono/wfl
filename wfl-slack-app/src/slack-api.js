@@ -18,7 +18,7 @@ module.exports = {
             }
         })
         .then(slackApiResponse => {
-            return slackApiResponse.user.real_name;
+            return slackApiResponse.user;
         });
     }
 }

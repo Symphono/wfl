@@ -49,9 +49,9 @@ function createMenuSelection(bot, data, orderIdTable, menuSelectionIdTable, desc
     }
     return slackApi
         .getUserInfo(data.user)
-        .then(name => wflApi.postMenuSelection(orderIdTable[data.channel], name, description, function(selectionJson) {
+        .then(user => wflApi.postMenuSelection(orderIdTable[data.channel], user.real_name, description, function(selectionJson) {
             menuSelectionIdTable[data.user] = selectionJson.properties.Id;
-            var message = 'OK! ' + name + `'s` + ' selection is ' + description + '.';
+            var message = 'OK! ' + user.real_name + `'s` + ' selection is ' + description + '.';
             bot.postMessage(data.channel, message);
         }))
 }
@@ -59,7 +59,7 @@ function createMenuSelection(bot, data, orderIdTable, menuSelectionIdTable, desc
 function deleteMenuSelection(bot, data, orderIdTable, menuSelectionIdTable) {
     wflApi.deleteMenuSelection(orderIdTable[data.channel], menuSelectionIdTable[data.user], function() {
         slackApi.getUserInfo(data.user)
-        .then(name => bot.postMessage(data.channel, name + `'s` + ' selection has been deleted.'))
+        .then(user => bot.postMessage(data.channel, user.real_name + `'s` + ' selection has been deleted.'))
     });
 }
 
