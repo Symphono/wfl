@@ -11,19 +11,19 @@ var bot = new Slackbot({
 
 bot.on('message', function(data) {
     if (data.text && data.subtype !== 'bot_message') {
-        if (data.text.indexOf('wfl order create') != -1) {
+        if (data.text.startsWith('wfl order create')) {
             handleWflRequest.handleOrderCreateRequest(bot, data, orderIdTable);
         }
-        else if (data.text.indexOf('wfl order discard') != -1) {
+        else if (data.text.startsWith('wfl order discard')) {
             handleWflRequest.handleOrderDiscardRequest(bot, data, orderIdTable);
         }
-        else if (data.text.indexOf('wfl order complete') != -1) {
+        else if (data.text.startsWith('wfl order complete')) {
             handleWflRequest.handleOrderCompleteRequest(bot, data, orderIdTable);
         }
-        else if (data.text.indexOf('wfl gimme') != -1) {
+        else if (data.text.startsWith('wfl gimme')) {
             handleWflRequest.handleGimmeRequest(bot, data, orderIdTable, menuSelectionIdTable)
         }
-        else if (data.text.indexOf('wfl') != -1) {
+        else if (data.text.startsWith('wfl')) {
             handleWflRequest.handleWflRequest(bot, data, orderIdTable);
         }
     }
