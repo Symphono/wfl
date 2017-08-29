@@ -1,0 +1,23 @@
+{
+  "name": "wfl-slackbot",
+  "description": "Group food order creation through slack",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Symphono/wfl"
+  },
+  "engine": {
+    "node": "6.11.2"
+  },
+  "main": "wfl-bot.js",
+  "keywords": [
+    "slackbot"
+  ],
+  "author": "Tej Nagaraja <tnagaraja@symphono.com>",
+  "license": "MIT",
+  "dependencies": {
+    "isomorphic-fetch": "^2.2.1",
+    "query-string": "^5.0.0",
+    "request": "^2.81.0",
+    "slackbots": "^1.0.2"
+  }
+}
