@@ -8,7 +8,7 @@
   "engine": {
     "node": "6.11.2"
   },
-  "main": "wfl-bot.js",
+  "main": "app.js",
   "keywords": [
     "slackbot"
   ],
