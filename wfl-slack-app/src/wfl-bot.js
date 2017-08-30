@@ -1,3 +1,4 @@
+require('dotenv').config();
 var Slackbot = require('slackbots');
 var handleWflRequest = require('./handle-wfl-request')
 

@@ -15,6 +15,7 @@
   "author": "Tej Nagaraja <tnagaraja@symphono.com>",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^4.0.0",
     "isomorphic-fetch": "^2.2.1",
     "query-string": "^5.0.0",
     "request": "^2.81.0",
