@@ -118,12 +118,9 @@ module.exports = {
             }
             else
             {
-                wflApi.getAllRestaurants(function(restaurantsJson) {
+                wflApi.getAllRestaurants().then(entities => {
                     var message = 'This channel does not have an active order. Here is a list of restaurants you may want to choose from!\n';
-                    for (let restaurant of restaurantsJson.entities)
-                    {
-                        message = message + restaurant.properties.Name + '\n';
-                    }
+                    entities.forEach(embeddedEntity => message = message + embeddedEntity.entity.properties.first() + '\n');
                     bot.postMessage(data.channel, message);
                 });
             }

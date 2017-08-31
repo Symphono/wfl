@@ -1,4 +1,5 @@
 var request = require('request');
+var Siren = require('super-siren').default;
 
 function postFoodOrder(restaurantId, callback) {
     let options = {
@@ -17,12 +18,7 @@ function postFoodOrder(restaurantId, callback) {
 }
 
 function getAllRestaurants(callback) {
-    let options = {
-        url: process.env.DB_URI + '/restaurant'
-    }
-    request.get(options, function(err, res, body) {
-        callback(JSON.parse(body));
-    });
+    return Siren.get(process.env.DB_URI + '/restaurant').then(res => res.body.entities);
 }
 
 function getFoodOrderById(id, callback) {
@@ -35,6 +31,12 @@ function getFoodOrderById(id, callback) {
 }
 
 function getRestaurantByName(name, callback) {
+    Siren.get(process.env.DB_URI + '/restaurant').then(res => res.body.findActionByName('filter-restaurants').perform({
+        Name: name
+    })).then(res => {
+        console.log(res.body);
+    });
+
     let options = {
         url: process.env.DB_URI + '/restaurant' + '?Name=' + name,
     }

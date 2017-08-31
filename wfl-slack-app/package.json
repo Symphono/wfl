@@ -19,6 +19,7 @@
     "isomorphic-fetch": "^2.2.1",
     "query-string": "^5.0.0",
     "request": "^2.81.0",
-    "slackbots": "^1.0.2"
+    "slackbots": "^1.0.2",
+    "super-siren": "^2.0.2"
   }
 }
